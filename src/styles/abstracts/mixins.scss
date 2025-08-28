@@ -1,0 +1,13 @@
+@use "@/styles/abstracts/variables" as *;
+
+@mixin min($screen) {
+  @media (min-width: $screen) {
+    @content;
+  }
+}
+
+@mixin max($screen) {
+  @media (max-width: $screen) {
+    @content;
+  }
+}
