@@ -16,6 +16,7 @@ interface IAuth {
 const titleText = {
   login: "Log In to your account",
   register: "Create a new account",
+  logout: "",
 };
 
 const Auth: FC<IAuth> = ({ action }) => {
