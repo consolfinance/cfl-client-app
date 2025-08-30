@@ -3,5 +3,8 @@
 @use "@/styles/abstracts/placeholders" as *;
 
 .root {
+  padding: 20px;
+  background: var(--gray-1);
+  border-radius: 8px;
   text-transform: capitalize;
 }

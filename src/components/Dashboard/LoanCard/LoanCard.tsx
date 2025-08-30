@@ -1,7 +1,7 @@
 "use client";
 
 import { FC } from "react";
-import { Badge, Card, Text } from "@radix-ui/themes";
+import { Badge, Button, Card, Text } from "@radix-ui/themes";
 import styles from "./LoanCard.module.scss";
 
 interface LoanCardProps {
@@ -18,9 +18,7 @@ const LoanCard: FC<LoanCardProps> = ({ id, type, slug, name, description }) => {
       <Card>
         <div className={styles.content}>
           <div className={styles.header}>
-            <Text size="5" color="purple">
-              {name}
-            </Text>
+            <Text size="5">{name}</Text>
             <Badge
               color={type === "personal" ? "green" : "blue"}
               variant="solid"
@@ -30,9 +28,16 @@ const LoanCard: FC<LoanCardProps> = ({ id, type, slug, name, description }) => {
               {type}
             </Badge>
           </div>
-          <Text size="3" color="gray">
-            {description}
-          </Text>
+          <div className={styles.description}>
+            <Text size="3" color="gray">
+              {description}
+            </Text>
+          </div>
+          <div className={styles.footer}>
+            <Button variant="outline" className={styles.button}>
+              Apply Now
+            </Button>
+          </div>
         </div>
       </Card>
     </div>

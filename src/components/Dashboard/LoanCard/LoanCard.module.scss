@@ -4,7 +4,6 @@
 
 .root {
   .content {
-    cursor: pointer;
     min-height: 220px;
     display: flex;
     flex-direction: column;
@@ -19,6 +18,17 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+    }
+
+    .footer {
+      margin-top: auto;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+
+      .button {
+        cursor: pointer;
+      }
     }
   }
 }
