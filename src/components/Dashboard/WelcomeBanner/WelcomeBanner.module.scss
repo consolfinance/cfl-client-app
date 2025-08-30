@@ -1,0 +1,14 @@
+@use "@/styles/abstracts/variables" as *;
+@use "@/styles/abstracts/mixins" as *;
+@use "@/styles/abstracts/placeholders" as *;
+
+.root {
+  padding: 20px;
+  background: var(--gray-1);
+  border-radius: 8px;
+  text-transform: capitalize;
+
+  @include max($tablet-s) {
+    padding: 10px;
+  }
+}

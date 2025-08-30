@@ -1,4 +1,4 @@
-export type AuthAction = "login" | "register";
+export type AuthAction = "login" | "register" | "logout";
 
 export interface AuthFormData {
   email: string;

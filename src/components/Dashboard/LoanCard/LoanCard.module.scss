@@ -1,0 +1,38 @@
+@use "@/styles/abstracts/variables" as *;
+@use "@/styles/abstracts/mixins" as *;
+@use "@/styles/abstracts/placeholders" as *;
+
+.root {
+  .content {
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    @include max($tablet-s) {
+      min-height: 150px;
+    }
+
+    .badge {
+      text-transform: capitalize;
+    }
+
+    .header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer {
+      margin-top: auto;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+
+      .button {
+        cursor: pointer;
+      }
+    }
+  }
+}
