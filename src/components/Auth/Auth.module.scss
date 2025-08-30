@@ -1,6 +1,7 @@
 @use "@/styles/abstracts/variables" as *;
 @use "@/styles/abstracts/mixins" as *;
 @use "@/styles/abstracts/placeholders" as *;
+@import "@radix-ui/colors/red.css";
 
 .authCard {
   width: 100%;
@@ -29,11 +30,19 @@
 
       .input {
         width: 100%;
+        &.errorBorder {
+          // border-color: var(--red-9);
+          border-color: #f00 !important;
+        }
       }
 
       .submitButton {
         cursor: pointer;
         margin-top: 5px;
+      }
+
+      .eyeButton {
+        cursor: pointer;
       }
     }
   }
