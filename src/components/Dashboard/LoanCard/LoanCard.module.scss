@@ -9,6 +9,10 @@
     flex-direction: column;
     gap: 10px;
 
+    @include max($tablet-s) {
+      min-height: 150px;
+    }
+
     .badge {
       text-transform: capitalize;
     }

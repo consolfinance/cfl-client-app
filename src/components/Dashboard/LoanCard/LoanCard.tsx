@@ -34,7 +34,7 @@ const LoanCard: FC<LoanCardProps> = ({ id, type, slug, name, description }) => {
             </Text>
           </div>
           <div className={styles.footer}>
-            <Button variant="outline" className={styles.button}>
+            <Button variant="solid" className={styles.button}>
               Apply Now
             </Button>
           </div>

@@ -10,7 +10,7 @@ const WelcomeBanner: FC = () => {
   const userFirstName = user?.firstName ?? "";
   return (
     <div className={styles.root}>
-      <Text size="6" color="purple">
+      <Text size="5" color="purple">
         {`Welcome${userFirstName ? `, ${userFirstName}` : ""}!`}
       </Text>
     </div>

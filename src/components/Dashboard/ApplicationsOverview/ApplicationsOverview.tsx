@@ -9,7 +9,15 @@ import LoanCard from "../LoanCard/LoanCard";
 const ApplicationsOverview: FC = () => {
   return (
     <div className={styles.root}>
-      <Text size="4">Start a new application or continue where you left off.</Text>
+      <div className={styles.header}>
+        <Text size="6" weight="bold">
+          Loan Applications
+        </Text>
+        <Text size="1" color="gray">
+          Start a new application or continue where you left off.
+        </Text>
+      </div>
+
       <div className={styles.loansOverview}>
         {dummyLoanTypes?.map((loan) => (
           <LoanCard
