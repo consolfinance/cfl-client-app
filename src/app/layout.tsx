@@ -7,6 +7,7 @@ import {
 import "@radix-ui/themes/styles.css";
 import "@radix-ui/themes/tokens/base.css";
 import "@/styles/base/reset.scss";
+import AuthWrapper from "@/components/Auth/AuthWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,7 +44,9 @@ export default function RootLayout({
           accentColor="purple"
           // appearance="dark"
         >
-          <div className="page">{children}</div>
+          <AuthWrapper>
+            <div className="page">{children}</div>
+          </AuthWrapper>
           {/* <ThemePanel /> */}
         </Theme>
       </body>
