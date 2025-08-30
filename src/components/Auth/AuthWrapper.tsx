@@ -24,16 +24,10 @@ const AuthWrapper: FC<{ children: ReactNode }> = ({ children }) => {
       // Even if we *have* user data in cookies, fetch it once
       if (!hasFetched) {
         setIsLoading(true);
-        console.log({
-          userData,
-          userDataVal: Cookies.get("user"),
-          hasFetched,
-          isRedirecting,
-        });
+
         const response = await fetch("/api/user/me");
 
         if (!response.ok) {
-          console.log({ response, responseData: await response.json() });
           if (!isRedirecting) {
             setIsRedirecting(true);
             logout();

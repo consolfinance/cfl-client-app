@@ -22,8 +22,6 @@ export async function POST(request: NextRequest) {
     const jwt = data.jwt;
     const user = data.user;
 
-    console.log({ user });
-
     if (!jwt) {
       return NextResponse.redirect(
         new URL("/login?error=MissingToken", request.url)

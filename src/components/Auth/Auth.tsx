@@ -113,11 +113,8 @@ const Auth: FC<IAuth> = ({ action }) => {
         }
         throw new Error("Login failed");
       }
-
-      const data = await response.json();
-      console.log("Login successful:", data);
     } catch (err) {
-      console.log({ err });
+      throw err;
     }
   };
   const handleRegister = async () => {
@@ -133,10 +130,6 @@ const Auth: FC<IAuth> = ({ action }) => {
       if (!response.ok) {
         throw new Error("Registration failed");
       }
-
-      const data = await response.json();
-      console.log("Registration successful:", data);
-      // set cookie then handle redirect
     } catch (err) {
       console.log({ err });
       throw err;
