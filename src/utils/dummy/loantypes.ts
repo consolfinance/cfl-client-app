@@ -5,6 +5,8 @@ type Question = {
   weight: number;
 };
 
+export type LoanType = "personal" | "business";
+
 export const dummyLoanTypes = [
   {
     id: 1,
