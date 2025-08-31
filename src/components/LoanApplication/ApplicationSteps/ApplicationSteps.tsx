@@ -1,25 +1,67 @@
 "use client";
 
-import { FC, useState, Dispatch, SetStateAction } from "react";
+import { FC, Dispatch, SetStateAction } from "react";
 import { Button, Card, Stepper, View } from "reshaped";
 import Question from "../Question/Question";
 import { loanTypeQuestions } from "@/utils/dummy/loantypes";
 import styles from "./ApplicationSteps.module.scss";
+import { LoanApplicationData } from "@/types/loans";
 
 type LoanTypeSlug = keyof typeof loanTypeQuestions;
 
 interface ApplicationStepsProps {
+  activeStep: number;
+  setActiveStep: Dispatch<SetStateAction<number>>;
   slug: LoanTypeSlug;
-  answers: Record<string, unknown>;
-  setAnswers: Dispatch<SetStateAction<Record<string, unknown>>>;
+  loanApplicationData: LoanApplicationData;
+
+  setLoanApplicationData: Dispatch<SetStateAction<LoanApplicationData>>;
 }
 
 const ApplicationSteps: FC<ApplicationStepsProps> = ({
-  answers,
+  loanApplicationData,
+  activeStep,
+  setActiveStep,
   slug,
-  setAnswers,
+  setLoanApplicationData,
 }) => {
-  const [activeStep, setActiveStep] = useState(0);
+  const handleSave = async (buttonType: "back" | "next") => {
+    try {
+      let newStep = activeStep;
+      if (buttonType === "back") {
+        newStep = Math.max(activeStep - 1, 0);
+      } else {
+        newStep = Math.min(activeStep + 1, loanTypeQuestions[slug]?.length - 1);
+      }
+
+      const payload = JSON.stringify({
+        ...loanApplicationData,
+        currentStep: newStep,
+        isComplete: newStep === loanTypeQuestions[slug]?.length - 1,
+        applicationStatus:
+          newStep === loanTypeQuestions[slug]?.length - 1 ? "submitted" : "draft",
+      });
+
+      const response = await fetch(
+        `/api/application/${loanApplicationData.documentId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: payload,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to save application step");
+      }
+
+      setActiveStep(newStep);
+    } catch (error) {
+      console.error("Error saving step:", error);
+    }
+  };
 
   return (
     <Card padding={0} className={styles.card}>
@@ -44,14 +86,27 @@ const ApplicationSteps: FC<ApplicationStepsProps> = ({
         </div>
 
         <div className={styles.questionsWrapper}>
-          {loanTypeQuestions[slug]?.[activeStep]?.questions.map((q) => (
-            <Question
-              key={q.key}
-              question={q}
-              value={answers[q.key]}
-              onChange={(val) => setAnswers((prev) => ({ ...prev, [q.key]: val }))}
-            />
-          ))}
+          {loanTypeQuestions[slug]?.[activeStep]?.questions.map((q) => {
+            console.log({ loanApplicationData, q });
+
+            return (
+              <Question
+                key={q.key}
+                question={q}
+                value={
+                  loanApplicationData?.answers
+                    ? loanApplicationData.answers[q.key]
+                    : undefined
+                }
+                onChange={(val) =>
+                  setLoanApplicationData((prev) => ({
+                    ...prev,
+                    answers: { ...prev.answers, [q.key]: val },
+                  }))
+                }
+              />
+            );
+          })}
         </div>
 
         <div className={styles.buttons}>
@@ -59,7 +114,9 @@ const ApplicationSteps: FC<ApplicationStepsProps> = ({
             className={styles.button}
             variant="solid"
             color="primary"
-            onClick={() => setActiveStep((prev) => Math.max(prev - 1, 0))}
+            onClick={() => {
+              handleSave("back");
+            }}
           >
             Back
           </Button>
@@ -68,9 +125,7 @@ const ApplicationSteps: FC<ApplicationStepsProps> = ({
             variant="solid"
             color="primary"
             onClick={() => {
-              setActiveStep((prev) =>
-                Math.min(prev + 1, loanTypeQuestions[slug]?.length - 1)
-              );
+              handleSave("next");
             }}
             // disabled={
             //   //if its the last step and theres an incomplete non boolean question

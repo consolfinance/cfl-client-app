@@ -1,28 +1,34 @@
 "use client";
 
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState, Dispatch, SetStateAction } from "react";
 import { Text } from "reshaped";
 import ApplicationSteps from "../ApplicationSteps/ApplicationSteps";
 import LoanCalculator from "../LoanCalculator/LoanCalculator";
 import { dummyLoanTypes, loanTypeQuestions } from "@/utils/dummy/loantypes";
-import type { LoanType } from "@/utils/dummy/loantypes";
+import type {} from "@/utils/dummy/loantypes";
+import type { LoanApplicationData } from "@/types/loans";
+
 import { CalculatorValues } from "@/types/loans";
 import styles from "./Overview.module.scss";
-
-type LoanTypeSlug = keyof typeof loanTypeQuestions;
 interface OverviewProps {
-  loanType: LoanType;
-  loanSlug: LoanTypeSlug;
+  loanApplicationData: LoanApplicationData;
+  setLoanApplicationData: Dispatch<SetStateAction<LoanApplicationData>>;
 }
 
-const Overview: FC<OverviewProps> = ({ loanType, loanSlug }) => {
+const Overview: FC<OverviewProps> = ({
+  loanApplicationData,
+  setLoanApplicationData,
+}) => {
+  const { loanType, loanSlug } = loanApplicationData;
   const [calculatorValues, setCalculatorValues] = useState<CalculatorValues>({
     amount: 0,
     term: 0,
     interestRate: 0,
   });
-  const [answers, setAnswers] = useState<Record<string, unknown>>({});
-  console.log({ answers });
+
+  const [activeStep, setActiveStep] = useState(
+    loanApplicationData?.currentStep || 0
+  );
   const loan = dummyLoanTypes.find(
     (l) => l.type === loanType && l.slug === loanSlug
   );
@@ -30,15 +36,27 @@ const Overview: FC<OverviewProps> = ({ loanType, loanSlug }) => {
   useEffect(() => {
     loanTypeQuestions[loanSlug]?.forEach((step) => {
       step.questions.forEach((q) => {
-        if (q.type === "boolean") {
-          setAnswers((prev) => ({ ...prev, [q.key]: false }));
-        }
-        if (q.type === "number") {
-          setAnswers((prev) => ({ ...prev, [q.key]: 0 }));
+        if (
+          !loanApplicationData?.answers ||
+          loanApplicationData?.answers[q.key] === undefined ||
+          loanApplicationData?.answers[q.key] === null
+        ) {
+          if (q.type === "boolean") {
+            setLoanApplicationData((prev) => ({
+              ...prev,
+              answers: { ...prev.answers, [q.key]: false },
+            }));
+          }
+          if (q.type === "number") {
+            setLoanApplicationData((prev) => ({
+              ...prev,
+              answers: { ...prev.answers, [q.key]: 0 },
+            }));
+          }
         }
       });
     });
-  }, [loanSlug]);
+  }, [loanSlug, loanApplicationData?.answers]);
 
   if (!loan) {
     return null;
@@ -56,9 +74,11 @@ const Overview: FC<OverviewProps> = ({ loanType, loanSlug }) => {
         )}
 
         <ApplicationSteps
+          activeStep={activeStep}
+          setActiveStep={setActiveStep}
           slug={loanSlug}
-          answers={answers}
-          setAnswers={setAnswers}
+          loanApplicationData={loanApplicationData}
+          setLoanApplicationData={setLoanApplicationData}
         />
       </div>
     </div>

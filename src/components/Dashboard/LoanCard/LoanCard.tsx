@@ -19,8 +19,31 @@ interface LoanCardProps {
 const LoanCard: FC<LoanCardProps> = ({ id, type, slug, name, description }) => {
   const router = useRouter();
 
-  const handleApplyNow = () => {
-    router.push(`/${type}/${slug}`);
+  const handleApplyNow = async () => {
+    try {
+      const payload = JSON.stringify({
+        loanType: type,
+        loanSlug: slug,
+        name,
+        description,
+        step: 1,
+      });
+
+      const response = await fetch("/api/application/new", {
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      router.push(`/applications/${data.documentId}`);
+    } catch (error) {
+      console.error("Error applying for loan:", error);
+    }
   };
 
   return (
