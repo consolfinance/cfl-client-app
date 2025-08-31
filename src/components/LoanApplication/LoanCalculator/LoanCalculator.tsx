@@ -3,6 +3,7 @@
 import { FC, Dispatch, SetStateAction } from "react";
 import { Card, View, Text } from "reshaped";
 import { CalculatorValues } from "@/types/loans";
+import styles from "./LoanCalculator.module.scss";
 
 interface LoanCalculatorProps {
   values: CalculatorValues;
@@ -11,8 +12,8 @@ interface LoanCalculatorProps {
 
 const LoanCalculator: FC<LoanCalculatorProps> = ({ values, onChange }) => {
   return (
-    <Card padding={0}>
-      <View padding={6} backgroundColor="elevation-base">
+    <Card padding={0} className={styles.root}>
+      <View padding={6} backgroundColor="neutral-faded" className={styles.content}>
         <input
           type="number"
           value={values.amount}

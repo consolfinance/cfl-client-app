@@ -2,12 +2,12 @@
 
 import { FC, useEffect, useState } from "react";
 import { Text } from "reshaped";
+import ApplicationSteps from "../ApplicationSteps/ApplicationSteps";
 import LoanCalculator from "../LoanCalculator/LoanCalculator";
 import { dummyLoanTypes, loanTypeQuestions } from "@/utils/dummy/loantypes";
-
 import type { LoanType } from "@/utils/dummy/loantypes";
 import { CalculatorValues } from "@/types/loans";
-import ApplicationSteps from "../ApplicationSteps/ApplicationSteps";
+import styles from "./Overview.module.scss";
 
 type LoanTypeSlug = keyof typeof loanTypeQuestions;
 interface OverviewProps {
@@ -50,11 +50,17 @@ const Overview: FC<OverviewProps> = ({ loanType, loanSlug }) => {
         {loan.name}
       </Text>
 
-      {1 < 0 && (
-        <LoanCalculator values={calculatorValues} onChange={setCalculatorValues} />
-      )}
+      <div className={styles.content}>
+        {1 < 2 && (
+          <LoanCalculator values={calculatorValues} onChange={setCalculatorValues} />
+        )}
 
-      <ApplicationSteps slug={loanSlug} answers={answers} setAnswers={setAnswers} />
+        <ApplicationSteps
+          slug={loanSlug}
+          answers={answers}
+          setAnswers={setAnswers}
+        />
+      </div>
     </div>
   );
 };

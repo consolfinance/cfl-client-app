@@ -2,14 +2,8 @@
 @use "@/styles/abstracts/mixins" as *;
 @use "@/styles/abstracts/placeholders" as *;
 
-.root {
-  min-height: 100vh;
+.content {
   display: flex;
-  flex-direction: column;
-  gap: 40px;
-  padding: 20px;
-
-  @include max($tablet-s) {
-    padding: 10px;
-  }
+  gap: 20px;
+  justify-content: flex-start;
 }
