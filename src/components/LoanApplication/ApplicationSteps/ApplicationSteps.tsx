@@ -34,10 +34,10 @@ const ApplicationSteps: FC<ApplicationStepsProps> = ({
               <Stepper.Item
                 key={index}
                 title={step.title}
-                completed={step.questions.every((q) => {
-                  const answer = answers[q.key];
-                  return typeof answer === "boolean" ? true : Boolean(answer);
-                })}
+                // completed={step.questions.every((q) => {
+                //   const answer = answers[q.key];
+                //   return typeof answer === "boolean" ? true : Boolean(answer);
+                // })}
               />
             ))}
           </Stepper>
