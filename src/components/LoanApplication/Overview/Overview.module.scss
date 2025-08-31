@@ -2,12 +2,13 @@
 @use "@/styles/abstracts/mixins" as *;
 @use "@/styles/abstracts/placeholders" as *;
 
-.root {
-  padding: 20px;
-  border-radius: 8px;
-  text-transform: capitalize;
+.content {
+  display: flex;
+  gap: 20px;
+  justify-content: flex-start;
 
   @include max($tablet-s) {
-    padding: 10px;
+    flex-direction: column-reverse;
+    gap: 10px;
   }
 }

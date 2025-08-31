@@ -3,7 +3,8 @@
 import { FC, useState } from "react";
 import { useRouter } from "next/navigation";
 import classNames from "classnames";
-import { Button, Card, IconButton, Text, TextField } from "@radix-ui/themes";
+import { Button, Card, View, Text, TextField } from "reshaped";
+import { IconButton } from "@radix-ui/themes";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import type { AuthAction } from "@/types/auth";
 import { AuthFormData } from "@/types/auth";
@@ -165,57 +166,64 @@ const Auth: FC<IAuth> = ({ action }) => {
 
   return (
     <Card className={styles.authCard}>
-      <div className={styles.root}>
-        <Text size="5" weight="bold" align="center" className={styles.title}>
+      <View className={styles.root}>
+        <Text
+          variant="featured-3"
+          weight="bold"
+          align="center"
+          className={styles.title}
+        >
           {titleText[action]}
         </Text>
         <form className={styles.form} onSubmit={handleSubmit} autoComplete="off">
           {action === "register" && (
             <>
               <div className={styles.formGroup}>
-                <Text size="1" as="label" htmlFor="firstName">
+                <Text variant="caption-1" as="label">
                   First Name
                 </Text>
-                <TextField.Root
-                  size="3"
+                <TextField
                   name="firstName"
-                  color={errors.firstName ? "red" : undefined}
+                  hasError={!!errors.firstName}
                   className={classNames(styles.input, {
                     [styles["errorBorder"]]: errors.firstName,
                   })}
                   placeholder="John"
                   value={formData.firstName}
-                  onChange={(e) => {
-                    setFormData({ ...formData, firstName: e.target.value });
+                  onChange={(args) => {
+                    const { value } = args;
+                    setFormData({ ...formData, firstName: value });
                     setErrors({ ...errors, firstName: "" });
                   }}
+                  onFocus={() => setErrors({ ...errors, firstName: "" })}
                 />
                 {errors.firstName && (
-                  <Text size="1" color="red">
+                  <Text variant="caption-1" color="critical">
                     {errors.firstName}
                   </Text>
                 )}
               </div>
               <div className={styles.formGroup}>
-                <Text size="1" as="label" htmlFor="lastName">
+                <Text variant="caption-1" as="label">
                   Last Name
                 </Text>
-                <TextField.Root
-                  size="3"
+                <TextField
                   name="lastName"
-                  color={errors.lastName ? "red" : undefined}
+                  hasError={!!errors.lastName}
                   className={classNames(styles.input, {
                     [styles["errorBorder"]]: errors.lastName,
                   })}
                   placeholder="Doe"
                   value={formData.lastName}
-                  onChange={(e) => {
-                    setFormData({ ...formData, lastName: e.target.value });
+                  onChange={(args) => {
+                    const { value } = args;
+                    setFormData({ ...formData, lastName: value });
                     setErrors({ ...errors, lastName: "" });
                   }}
+                  onFocus={() => setErrors({ ...errors, lastName: "" })}
                 />
                 {errors.lastName && (
-                  <Text size="1" color="red">
+                  <Text variant="caption-1" color="critical">
                     {errors.lastName}
                   </Text>
                 )}
@@ -224,71 +232,76 @@ const Auth: FC<IAuth> = ({ action }) => {
           )}
 
           <div className={styles.formGroup}>
-            <Text size="1" as="label" htmlFor="email">
+            <Text variant="caption-1" as="label">
               Email
             </Text>
-            <TextField.Root
-              size="3"
+            <TextField
               name="email"
-              color={errors.email ? "red" : undefined}
+              hasError={!!errors.email}
               className={classNames(styles.input, {
                 [styles["errorBorder"]]: errors.email,
               })}
               placeholder="johnbanda@gmail.com"
               value={formData.email}
-              onChange={(e) => {
-                setFormData({ ...formData, email: e.target.value });
+              onChange={(args) => {
+                const { value } = args;
+                setFormData({ ...formData, email: value });
                 setErrors({ ...errors, email: "" });
               }}
+              onFocus={() => setErrors({ ...errors, email: "" })}
             />
             {errors.email && (
-              <Text size="1" color="red">
+              <Text variant="caption-1" color="critical">
                 {errors.email}
               </Text>
             )}
           </div>
           <div className={styles.formGroup}>
-            <Text size="1" as="label" htmlFor="password">
+            <Text variant="caption-1" as="label">
               Password
             </Text>
-            <TextField.Root
-              size="3"
+            <TextField
+              hasError={!!errors.password}
               name="password"
-              type={showPassword ? "text" : "password"}
-              color={errors.password ? "red" : undefined}
+              inputAttributes={{
+                type: showPassword ? "text" : "password",
+              }}
               className={classNames(styles.input, {
                 [styles["errorBorder"]]: errors.password,
               })}
               placeholder={showPassword ? "p@sSworD1!" : "********"}
               value={formData.password}
-              onChange={(e) => {
-                setFormData({ ...formData, password: e.target.value });
+              onChange={(args) => {
+                const { value } = args;
+                setFormData({ ...formData, password: value });
                 setErrors({ ...errors, password: "" });
               }}
-            >
-              <TextField.Slot side="right">
-                <IconButton
-                  onClick={() => setShowPassword(!showPassword)}
-                  variant="ghost"
-                  type="button"
-                  className={styles.eyeButton}
-                >
-                  {showPassword && <EyeOpenIcon width="12" height="12" />}
-                  {!showPassword && <EyeClosedIcon width="12" height="12" />}
-                </IconButton>
-              </TextField.Slot>
-            </TextField.Root>
+              onFocus={() => setErrors({ ...errors, password: "" })}
+              endIcon={
+                <>
+                  <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    variant="ghost"
+                    type="button"
+                    className={styles.eyeButton}
+                  >
+                    {showPassword && <EyeOpenIcon width="12" height="12" />}
+                    {!showPassword && <EyeClosedIcon width="12" height="12" />}
+                  </IconButton>
+                </>
+              }
+            />
             {errors.password && (
-              <Text size="1" color="red">
+              <Text variant="caption-1" color="critical">
                 {errors.password}
               </Text>
             )}
           </div>
 
           <Button
+            color="primary"
             className={styles.submitButton}
             type="submit"
-            size="3"
             // disabled={isSubmitting}
             loading={isSubmitting}
           >
@@ -297,9 +310,9 @@ const Auth: FC<IAuth> = ({ action }) => {
           </Button>
         </form>
         <div className={styles.footer}>
-          <Text size="1" align="center" as="p" color="gray">
+          <Text variant="caption-1" align="center" as="p" color="neutral-faded">
             {`${
-              action === "login"
+              action === "register"
                 ? "Already have an account?"
                 : "Don't have an account?"
             }`}{" "}
@@ -311,7 +324,7 @@ const Auth: FC<IAuth> = ({ action }) => {
             </a>
           </Text>
         </div>
-      </div>
+      </View>
     </Card>
   );
 };

@@ -1,0 +1,56 @@
+@use "@/styles/abstracts/variables" as *;
+@use "@/styles/abstracts/mixins" as *;
+@use "@/styles/abstracts/placeholders" as *;
+
+.card {
+  width: 100%;
+  max-width: 50%;
+
+  @include max($tablet-s) {
+    max-width: 100%;
+  }
+
+  .root {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+
+    @include max($tablet-s) {
+      max-width: 100%;
+      gap: 10px;
+    }
+
+    .stepperWrapper {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+
+      .stepper {
+        width: 100%;
+      }
+    }
+
+    .questionsWrapper {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .buttons {
+      width: 100%;
+      max-width: 300px;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 0 auto;
+
+      .button {
+        width: 100%;
+      }
+    }
+  }
+}

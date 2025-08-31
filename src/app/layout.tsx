@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Questrial } from "next/font/google";
-import {
-  Theme,
-  // ThemePanel
-} from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
 import "@radix-ui/themes/tokens/base.css";
 import "@/styles/base/reset.scss";
 import AuthWrapper from "@/components/Auth/AuthWrapper";
+import App from "@/components/Reshaped/App/App";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,15 +37,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${questrial.variable}`}
       >
-        <Theme
-          accentColor="purple"
-          // appearance="dark"
-        >
+        <App>
           <AuthWrapper>
             <div className="page">{children}</div>
           </AuthWrapper>
           {/* <ThemePanel /> */}
-        </Theme>
+        </App>
       </body>
     </html>
   );

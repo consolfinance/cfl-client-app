@@ -3,9 +3,11 @@
 @use "@/styles/abstracts/placeholders" as *;
 
 .root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
   padding: 20px;
-  border-radius: 8px;
-  text-transform: capitalize;
 
   @include max($tablet-s) {
     padding: 10px;

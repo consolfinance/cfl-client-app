@@ -15,6 +15,15 @@
 
     .badge {
       text-transform: capitalize;
+
+      &.personal {
+        background: #5b0766;
+        color: white;
+      }
+      &.business {
+        background: #4a4e69;
+        color: white;
+      }
     }
 
     .header {
