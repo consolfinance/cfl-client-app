@@ -2,9 +2,12 @@
 
 import { FC } from "react";
 import { useParams, notFound } from "next/navigation";
+import Overview from "@/components/LoanApplication/Overview/Overview";
 import { dummyLoanTypes } from "@/utils/dummy/loantypes";
-import type { LoanType } from "@/utils/dummy/loantypes";
+import type { LoanType, loanTypeQuestions } from "@/utils/dummy/loantypes";
+import styles from "./page.module.scss";
 
+type LoanTypeSlug = keyof typeof loanTypeQuestions;
 const LoanApplicationPage: FC = () => {
   const params = useParams();
 
@@ -26,7 +29,14 @@ const LoanApplicationPage: FC = () => {
     notFound();
   }
 
-  return <div>Loan Application Page</div>;
+  return (
+    <div className={styles.root}>
+      <Overview
+        loanType={businessLoanType}
+        loanSlug={businessSlug as LoanTypeSlug}
+      />
+    </div>
+  );
 };
 
 export default LoanApplicationPage;
