@@ -6,4 +6,9 @@
   display: flex;
   gap: 20px;
   justify-content: flex-start;
+
+  @include max($tablet-s) {
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
 }
