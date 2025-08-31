@@ -67,13 +67,22 @@ const ApplicationSteps: FC<ApplicationStepsProps> = ({
             className={styles.button}
             variant="solid"
             color="primary"
-            onClick={() =>
+            onClick={() => {
               setActiveStep((prev) =>
                 Math.min(prev + 1, loanTypeQuestions[slug]?.length - 1)
-              )
-            }
+              );
+            }}
+            // disabled={
+            //   //if its the last step and theres an incomplete non boolean question
+            //   activeStep === loanTypeQuestions[slug]?.length - 1 &&
+            //   !loanTypeQuestions[slug]?.[activeStep]?.questions.every((q) => {
+            //     const answer = answers[q.key];
+            //     console.log({ answer });
+            //     return typeof answer === "boolean" ? true : Boolean(answer);
+            //   })
+            // }
           >
-            Next
+            {activeStep === loanTypeQuestions[slug]?.length - 1 ? "Submit" : "Next"}
           </Button>
         </div>
       </View>
