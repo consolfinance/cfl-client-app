@@ -20,7 +20,7 @@ const LoanCard: FC<LoanCardProps> = ({ id, type, slug, name, description }) => {
           <div className={styles.header}>
             <Text size="5">{name}</Text>
             <Badge
-              color={type === "personal" ? "green" : "blue"}
+              color={type === "personal" ? "green" : "violet"}
               variant="solid"
               size="2"
               className={styles.badge}
