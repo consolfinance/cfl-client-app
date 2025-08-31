@@ -7,7 +7,8 @@ const config = {
         foregroundNeutralFaded: { hex: "#6c757d", hexDark: "#a0a0a0" },
         foregroundDisabled: { hex: "#adb5bd", hexDark: "#666666" },
         foregroundPrimary: { hex: "#9108db", hexDark: "#9108db" },
-        foregroundCritical: { hex: "#c92a2a", hexDark: "#ff4d4d" },
+        foregroundCritical: { hex: "#c92a2a", hexDark: "#ff4d4d" }, // Slightly deeper red
+
         foregroundPositive: { hex: "#2bb673", hexDark: "#2bb673" },
 
         // Borders
@@ -16,7 +17,7 @@ const config = {
         borderDisabled: { hex: "#ced4da", hexDark: "#555555" },
         borderPrimary: { hex: "#9108db", hexDark: "#9108db" },
         borderPrimaryFaded: { hex: "#b476e5", hexDark: "#c09ae9" },
-        borderCritical: { hex: "#e03131", hexDark: "#ff6666" },
+        borderCritical: { hex: "#c92a2a", hexDark: "#ff6666" },
         borderCriticalFaded: { hex: "#f03e3e88", hexDark: "#ff66668a" },
         borderPositive: { hex: "#2bb673", hexDark: "#2bb673" },
         borderPositiveFaded: { hex: "#a8f0c9", hexDark: "#206f4a" },
@@ -28,7 +29,7 @@ const config = {
         backgroundDisabledFaded: { hex: "#e9ecef", hexDark: "#424242" },
         backgroundPrimary: { hex: "#9108db", hexDark: "#9108db" },
         backgroundPrimaryFaded: { hex: "#f3e6fb", hexDark: "#b476e5" },
-        backgroundCritical: { hex: "#c92828", hexDark: "#801212" },
+        backgroundCritical: { hex: "#c92828", hexDark: "#801212" }, // Light red background
         backgroundCriticalFaded: { hex: "#ca5e5ea8", hexDark: "#4a14148a" },
         backgroundPositive: { hex: "#d9fbe9", hexDark: "#1e4634" },
         backgroundPositiveFaded: { hex: "#e6f4ea", hexDark: "#243c2f" },
