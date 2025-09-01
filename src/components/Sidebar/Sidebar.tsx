@@ -1,16 +1,32 @@
 "use client";
 
-import { FC } from "react";
-import { usePathname } from "next/navigation";
-import { Card, Text, View } from "reshaped";
+import { FC, useCallback } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { Button, Card, Divider, MenuItem, Text, View } from "reshaped";
+import { menuItems } from "@/utils/menuItems";
 import styles from "./Sidebar.module.scss";
+import { ExitIcon } from "@radix-ui/react-icons";
 
 const Sidebar: FC = () => {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const logout = useCallback(async () => {
+    try {
+      // Prevent the loop by checking if already redirecting
+
+      await fetch("/api/auth/logout");
+      window.location.href = "/auth/login"; // Redirect to login after logout
+    } catch (error) {
+      console.error("Error logging out:", error);
+    } finally {
+    }
+  }, []);
 
   if (pathname.startsWith("/auth")) {
     return null;
   }
+
   return (
     <View className={styles.root}>
       <Card padding={0} className={styles.card}>
@@ -24,6 +40,51 @@ const Sidebar: FC = () => {
           <Text variant="featured-3" color="neutral">
             Consol Finance
           </Text>
+
+          <View className={styles.menu}>
+            {menuItems.map((item) => (
+              <MenuItem
+                key={item.id}
+                roundedCorners
+                startSlot={<item.icon />}
+                disabled={item.disabled}
+                selected={
+                  (pathname === "/" && item.title === "Dashboard") ||
+                  (pathname.startsWith("/application") &&
+                    item.title === "My Applications") ||
+                  (pathname.startsWith(item.route + "/") && item.route !== "/")
+                }
+                href={item.route}
+                highlighted={pathname !== item.route}
+              >
+                {item.title}
+              </MenuItem>
+            ))}
+          </View>
+
+          <div className={styles.footer}>
+            <Divider />
+            <div className={styles.footerButtons}>
+              <Button
+                variant="solid"
+                color="primary"
+                onClick={() => {
+                  router.push("/");
+                }}
+              >
+                New Application
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  logout();
+                }}
+                icon={<ExitIcon />}
+              >
+                Sign Out
+              </Button>
+            </div>
+          </div>
         </View>
       </Card>
     </View>

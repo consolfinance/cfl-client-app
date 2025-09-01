@@ -18,5 +18,26 @@
   }
   .sidebar {
     display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .footer {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      .footerButtons {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+    }
   }
 }
