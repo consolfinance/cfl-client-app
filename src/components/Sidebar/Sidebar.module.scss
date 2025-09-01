@@ -8,6 +8,9 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-height: 100vh;
+  position: sticky;
+  top: 0;
 
   @include max($tablet-s) {
     display: none;
@@ -15,11 +18,15 @@
 
   .card {
     flex: 1;
+    display: flex;
+    flex-direction: column;
   }
+
   .sidebar {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    flex: 1;
 
     .menu {
       display: flex;

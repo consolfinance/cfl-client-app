@@ -41,7 +41,7 @@ const Sidebar: FC = () => {
             Consol Finance
           </Text>
 
-          <View className={styles.menu}>
+          <View className={styles.menu} height="100%">
             {menuItems.map((item) => (
               <MenuItem
                 key={item.id}
