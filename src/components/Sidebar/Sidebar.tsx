@@ -1,7 +1,9 @@
 "use client";
 
 import { FC, useCallback } from "react";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
+import CFLLogo from "@/public/CFL-logo.png";
 import { Button, Card, Divider, MenuItem, Text, View } from "reshaped";
 import { menuItems } from "@/utils/menuItems";
 import styles from "./Sidebar.module.scss";
@@ -37,9 +39,12 @@ const Sidebar: FC = () => {
           className={styles.sidebar}
           padding={6}
         >
-          <Text variant="featured-3" color="neutral">
-            Consol Finance
-          </Text>
+          <View direction="row" align="center" gap={2}>
+            <Image src={CFLLogo} alt="Consol Finance" width={32} height={32} />
+            <Text variant="featured-3" color="neutral">
+              Consol Finance
+            </Text>
+          </View>
 
           <View className={styles.menu} height="100%">
             {menuItems.map((item) => (
