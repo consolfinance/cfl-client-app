@@ -9,6 +9,10 @@
   flex-direction: column;
   height: 100%;
 
+  @include max($tablet-s) {
+    display: none;
+  }
+
   .card {
     flex: 1;
   }

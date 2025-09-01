@@ -49,15 +49,13 @@ const LoanCard: FC<LoanCardProps> = ({ id, type, slug, name, description }) => {
   return (
     <div className={styles.root}>
       <Card padding={0}>
-        <View backgroundColor="elevation-base" padding={4}>
+        <View backgroundColor="elevation-overlay" padding={4}>
           <div className={styles.content}>
             <div className={styles.header}>
               <Text variant="body-2" color="primary">
                 {name}
               </Text>
               <Badge
-                // color={type === "personal" ? "green" : "violet"}
-                // variant="solid"
                 size="medium"
                 className={classNames(styles.badge, {
                   [styles.personal]: type === "personal",
@@ -68,13 +66,14 @@ const LoanCard: FC<LoanCardProps> = ({ id, type, slug, name, description }) => {
               </Badge>
             </div>
             <div className={styles.description}>
-              <Text variant="body-3" color="primary">
+              <Text variant="body-3" color="neutral">
                 {description}
               </Text>
             </div>
             <div className={styles.footer}>
               <Button
                 variant="solid"
+                color="primary"
                 className={styles.button}
                 onClick={handleApplyNow}
               >

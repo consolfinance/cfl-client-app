@@ -1,19 +1,19 @@
 "use client";
 
 import { FC } from "react";
-import { Text } from "@radix-ui/themes";
-import styles from "./ApplicationsOverview.module.scss";
-import { dummyLoanTypes } from "@/utils/dummy/loantypes";
+import { Text, View } from "reshaped";
 import LoanCard from "../LoanCard/LoanCard";
+import { dummyLoanTypes } from "@/utils/dummy/loantypes";
+import styles from "./ApplicationsOverview.module.scss";
 
 const ApplicationsOverview: FC = () => {
   return (
-    <div className={styles.root}>
+    <View className={styles.root} backgroundColor="elevation-base">
       <div className={styles.header}>
-        <Text size="6" weight="bold">
+        <Text variant="featured-3" weight="bold">
           Loan Applications
         </Text>
-        <Text size="1" color="gray">
+        <Text variant="caption-1" color="neutral-faded">
           Start a new application or continue where you left off.
         </Text>
       </div>
@@ -30,7 +30,7 @@ const ApplicationsOverview: FC = () => {
           />
         ))}
       </div>
-    </div>
+    </View>
   );
 };
 
