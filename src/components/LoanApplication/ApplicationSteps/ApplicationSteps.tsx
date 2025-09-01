@@ -3,10 +3,10 @@
 import { FC, Dispatch, SetStateAction } from "react";
 import { Button, Card, Stepper, View } from "reshaped";
 import Question from "../Question/Question";
-import { loanTypeQuestions } from "@/utils/dummy/loantypes";
+import { computeScore, loanTypeQuestions } from "@/utils/dummy/loantypes";
 import styles from "./ApplicationSteps.module.scss";
 import { LoanApplicationData } from "@/types/loans";
-
+import type { Question as LoanQuestion } from "@/utils/dummy/loantypes";
 type LoanTypeSlug = keyof typeof loanTypeQuestions;
 
 interface ApplicationStepsProps {
@@ -34,12 +34,42 @@ const ApplicationSteps: FC<ApplicationStepsProps> = ({
         newStep = Math.min(activeStep + 1, loanTypeQuestions[slug]?.length - 1);
       }
 
+      let scoreDetails: { score: number | undefined; grade: string | undefined } = {
+        score: undefined,
+        grade: undefined,
+      };
+      const isLastStep = newStep === loanTypeQuestions[slug]?.length - 1;
+
+      const questions = loanTypeQuestions[slug]?.flatMap(
+        (q) => q.questions
+      ) as LoanQuestion[];
+
+      if (isLastStep && buttonType === "next") {
+        scoreDetails = computeScore(
+          loanApplicationData.answers as Record<string, boolean | number>,
+          questions
+        );
+      }
+
+      const isFormComplete = questions.every((q) => {
+        const answer = loanApplicationData.answers[q.key];
+        return typeof answer === "boolean" ? true : Boolean(answer);
+      });
+
       const payload = JSON.stringify({
         ...loanApplicationData,
         currentStep: newStep,
-        isComplete: newStep === loanTypeQuestions[slug]?.length - 1,
+        isComplete: isLastStep,
         applicationStatus:
-          newStep === loanTypeQuestions[slug]?.length - 1 ? "submitted" : "draft",
+          activeStep === loanTypeQuestions[slug]?.length - 1 && isFormComplete
+            ? "submitted"
+            : "draft",
+        score: scoreDetails?.score ?? undefined,
+        grade: scoreDetails?.grade ?? undefined,
+        createdAt: undefined,
+        updatedAt: undefined,
+        locale: undefined,
+        publishedAt: undefined,
       });
 
       const response = await fetch(
@@ -58,6 +88,10 @@ const ApplicationSteps: FC<ApplicationStepsProps> = ({
       }
 
       setActiveStep(newStep);
+      setLoanApplicationData((prev) => ({
+        ...prev,
+        ...JSON.parse(payload),
+      }));
     } catch (error) {
       console.error("Error saving step:", error);
     }

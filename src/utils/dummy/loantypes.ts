@@ -1,4 +1,4 @@
-type Question = {
+export type Question = {
   key: string;
   label: string;
   type: "boolean" | "number";
@@ -219,5 +219,8 @@ export function computeScore(
   else if (score >= 680) grade = "C";
   else if (score >= 630) grade = "D";
 
-  return { score, grade };
+  return {
+    score: Math.round(score),
+    grade,
+  };
 }

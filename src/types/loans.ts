@@ -15,4 +15,5 @@ export type LoanApplicationData = {
   grade: string;
   score: number;
   answers: Record<string, unknown>;
+  applicationStatus?: string;
 };

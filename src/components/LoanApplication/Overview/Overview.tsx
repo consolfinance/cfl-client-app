@@ -1,7 +1,7 @@
 "use client";
 
 import { FC, useEffect, useState, Dispatch, SetStateAction } from "react";
-import { Card, Text, View } from "reshaped";
+import { Badge, Card, Text, View } from "reshaped";
 import ApplicationSteps from "../ApplicationSteps/ApplicationSteps";
 import LoanCalculator from "../LoanCalculator/LoanCalculator";
 import { dummyLoanTypes, loanTypeQuestions } from "@/utils/dummy/loantypes";
@@ -36,6 +36,34 @@ const Overview: FC<OverviewProps> = ({
   const showCalculator = JSON.parse(
     process.env.NEXT_PUBLIC_APP_SHOW_CALCULATOR || "false"
   );
+
+  const getBadgeColor = () => {
+    switch (loanApplicationData.applicationStatus) {
+      case "draft":
+        return "neutral";
+      case "submitted":
+        return "positive";
+      case "approved":
+        return "positive";
+      case "rejected":
+        return "critical";
+      default:
+        return "neutral";
+    }
+  };
+
+  const getScoreColor = () => {
+    switch (loanApplicationData.grade) {
+      case "A":
+        return "positive";
+      case "B":
+        return "positive";
+      case "C":
+        return "warning";
+      default:
+        return "critical";
+    }
+  };
 
   useEffect(() => {
     loanTypeQuestions[loanSlug]?.forEach((step) => {
@@ -74,9 +102,32 @@ const Overview: FC<OverviewProps> = ({
         className={styles.root}
         backgroundColor="elevation-base"
       >
-        <Text variant="featured-2" color="primary">
-          {loan.name}
-        </Text>
+        <View align="center" gap={2} justify={"space-between"} direction={"row"}>
+          <Text variant="featured-2" color="primary">
+            {loan.name}
+          </Text>
+
+          <View align="center" gap={2} justify={"space-between"} direction={"row"}>
+            {loanApplicationData.applicationStatus !== "draft" && (
+              <View direction={"row"} gap={2} align="center">
+                <Text variant="body-1" color="neutral">
+                  Your Score:{" "}
+                </Text>
+                <Text variant="body-1" color={getScoreColor()} weight={"bold"}>
+                  {loanApplicationData?.score || 0} (
+                  {loanApplicationData?.grade || "N/A"})
+                </Text>
+              </View>
+            )}
+            <Badge
+              color={getBadgeColor()}
+              size="large"
+              className={styles.statusBadge}
+            >
+              {loanApplicationData?.applicationStatus || "draft"}
+            </Badge>
+          </View>
+        </View>
 
         <div className={styles.content}>
           {showCalculator && (

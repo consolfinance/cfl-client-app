@@ -46,7 +46,7 @@ const Sidebar: FC = () => {
               <MenuItem
                 key={item.id}
                 roundedCorners
-                startSlot={<item.icon />}
+                startSlot={<item.icon width={14} height={14} />}
                 disabled={item.disabled}
                 selected={
                   (pathname === "/" && item.title === "Dashboard") ||
@@ -79,7 +79,7 @@ const Sidebar: FC = () => {
                 onClick={() => {
                   logout();
                 }}
-                icon={<ExitIcon />}
+                icon={<ExitIcon width={14} height={14} />}
               >
                 Sign Out
               </Button>
