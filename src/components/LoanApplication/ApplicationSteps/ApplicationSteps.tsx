@@ -65,7 +65,7 @@ const ApplicationSteps: FC<ApplicationStepsProps> = ({
 
   return (
     <Card padding={0} className={styles.card}>
-      <View className={styles.root} padding={8} backgroundColor="neutral-faded">
+      <View className={styles.root} padding={8} backgroundColor="elevation-overlay">
         <div className={styles.stepperWrapper}>
           <Stepper
             activeId={activeStep}

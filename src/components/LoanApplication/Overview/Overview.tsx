@@ -1,7 +1,7 @@
 "use client";
 
 import { FC, useEffect, useState, Dispatch, SetStateAction } from "react";
-import { Text } from "reshaped";
+import { Card, Text, View } from "reshaped";
 import ApplicationSteps from "../ApplicationSteps/ApplicationSteps";
 import LoanCalculator from "../LoanCalculator/LoanCalculator";
 import { dummyLoanTypes, loanTypeQuestions } from "@/utils/dummy/loantypes";
@@ -31,6 +31,10 @@ const Overview: FC<OverviewProps> = ({
   );
   const loan = dummyLoanTypes.find(
     (l) => l.type === loanType && l.slug === loanSlug
+  );
+
+  const showCalculator = JSON.parse(
+    process.env.NEXT_PUBLIC_APP_SHOW_CALCULATOR || "false"
   );
 
   useEffect(() => {
@@ -63,25 +67,35 @@ const Overview: FC<OverviewProps> = ({
   }
 
   return (
-    <div>
-      <Text variant="featured-2" color="primary">
-        {loan.name}
-      </Text>
+    <Card padding={0} className={styles.card}>
+      <View
+        gap={4}
+        padding={6}
+        className={styles.root}
+        backgroundColor="elevation-base"
+      >
+        <Text variant="featured-2" color="primary">
+          {loan.name}
+        </Text>
 
-      <div className={styles.content}>
-        {1 < 2 && (
-          <LoanCalculator values={calculatorValues} onChange={setCalculatorValues} />
-        )}
+        <div className={styles.content}>
+          {showCalculator && (
+            <LoanCalculator
+              values={calculatorValues}
+              onChange={setCalculatorValues}
+            />
+          )}
 
-        <ApplicationSteps
-          activeStep={activeStep}
-          setActiveStep={setActiveStep}
-          slug={loanSlug}
-          loanApplicationData={loanApplicationData}
-          setLoanApplicationData={setLoanApplicationData}
-        />
-      </div>
-    </div>
+          <ApplicationSteps
+            activeStep={activeStep}
+            setActiveStep={setActiveStep}
+            slug={loanSlug}
+            loanApplicationData={loanApplicationData}
+            setLoanApplicationData={setLoanApplicationData}
+          />
+        </div>
+      </View>
+    </Card>
   );
 };
 

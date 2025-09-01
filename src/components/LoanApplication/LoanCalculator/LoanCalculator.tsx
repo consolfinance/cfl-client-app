@@ -13,7 +13,11 @@ interface LoanCalculatorProps {
 const LoanCalculator: FC<LoanCalculatorProps> = ({ values, onChange }) => {
   return (
     <Card padding={0} className={styles.root}>
-      <View padding={6} backgroundColor="neutral-faded" className={styles.content}>
+      <View
+        padding={6}
+        backgroundColor="elevation-overlay"
+        className={styles.content}
+      >
         <Text variant={"featured-2"}>CALCULATOR</Text>
       </View>
     </Card>
