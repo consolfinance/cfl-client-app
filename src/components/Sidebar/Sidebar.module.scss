@@ -3,16 +3,16 @@
 @use "@/styles/abstracts/placeholders" as *;
 
 .root {
-  // background: var(--gray-3);
-  padding: 20px;
-  width: 100%;
-  flex: 1;
+  padding: 20px 10px;
+  width: 250px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  border-radius: 8px;
+  height: 100%;
 
-  @include max($tablet-s) {
-    padding: 10px;
+  .card {
+    flex: 1;
+  }
+  .sidebar {
+    display: flex;
   }
 }

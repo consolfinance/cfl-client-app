@@ -1,0 +1,10 @@
+.page {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  height: 100vh;
+
+  .pageContent {
+    flex: 1;
+  }
+}
