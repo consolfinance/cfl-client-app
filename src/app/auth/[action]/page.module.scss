@@ -1,3 +1,7 @@
+@use "@/styles/abstracts/variables" as *;
+@use "@/styles/abstracts/mixins" as *;
+@use "@/styles/abstracts/placeholders" as *;
+
 .root {
   min-height: 100vh;
   display: flex;

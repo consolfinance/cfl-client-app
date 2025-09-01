@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Questrial } from "next/font/google";
-import {
-  Theme,
-  // ThemePanel
-} from "@radix-ui/themes";
+import { View } from "reshaped";
+import AuthWrapper from "@/components/Auth/AuthWrapper";
+import App from "@/components/Reshaped/App/App";
+import Sidebar from "@/components/Sidebar/Sidebar";
 import "@radix-ui/themes/styles.css";
 import "@radix-ui/themes/tokens/base.css";
 import "@/styles/base/reset.scss";
+import styles from "./layout.module.scss";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,6 +28,14 @@ const questrial = Questrial({
 export const metadata: Metadata = {
   title: "Consol Finance",
   description: "Consol Finance App",
+  icons: {
+    icon: [
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
+  manifest: "/site.webmanifest",
 };
 
 export default function RootLayout({
@@ -39,13 +48,16 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${questrial.variable}`}
       >
-        <Theme
-          accentColor="purple"
-          // appearance="dark"
-        >
-          <div className="page">{children}</div>
-          {/* <ThemePanel /> */}
-        </Theme>
+        <App>
+          <AuthWrapper>
+            <View backgroundColor="elevation-raised">
+              <div className={styles.page}>
+                <Sidebar />
+                <div className={styles.pageContent}>{children}</div>
+              </div>
+            </View>
+          </AuthWrapper>
+        </App>
       </body>
     </html>
   );

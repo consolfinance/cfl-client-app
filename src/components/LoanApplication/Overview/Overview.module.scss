@@ -1,0 +1,23 @@
+@use "@/styles/abstracts/variables" as *;
+@use "@/styles/abstracts/mixins" as *;
+@use "@/styles/abstracts/placeholders" as *;
+
+.card {
+  height: 100%;
+}
+
+.content {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: flex-start;
+
+  @include max($tablet-s) {
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
+}
+
+.statusBadge {
+  text-transform: capitalize;
+}

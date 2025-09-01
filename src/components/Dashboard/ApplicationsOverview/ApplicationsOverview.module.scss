@@ -1,0 +1,31 @@
+@use "@/styles/abstracts/variables" as *;
+@use "@/styles/abstracts/mixins" as *;
+@use "@/styles/abstracts/placeholders" as *;
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  border-radius: 8px;
+
+  @include max($tablet-s) {
+    padding: 10px;
+  }
+
+  .header {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .loansOverview {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+
+    @include max($tablet-s) {
+      grid-template-columns: 1fr;
+    }
+  }
+}
