@@ -5,12 +5,14 @@ import ApplicationsOverview from "./ApplicationsOverview/ApplicationsOverview";
 import WelcomeBanner from "./WelcomeBanner/WelcomeBanner";
 
 import styles from "./Dashboard.module.scss";
+import UserApplications from "./UserApplications/UserApplications";
 
 const Dashboard: FC = () => {
   return (
     <div className={styles.root}>
       <WelcomeBanner />
       <ApplicationsOverview />
+      <UserApplications />
     </div>
   );
 };

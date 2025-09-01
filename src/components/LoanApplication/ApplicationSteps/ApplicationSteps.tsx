@@ -1,6 +1,7 @@
 "use client";
 
 import { FC, Dispatch, SetStateAction } from "react";
+import { useRouter } from "next/navigation";
 import { Button, Card, Stepper, View } from "reshaped";
 import Question from "../Question/Question";
 import { computeScore, loanTypeQuestions } from "@/utils/dummy/loantypes";
@@ -25,6 +26,8 @@ const ApplicationSteps: FC<ApplicationStepsProps> = ({
   slug,
   setLoanApplicationData,
 }) => {
+  const router = useRouter();
+
   const handleSave = async (buttonType: "back" | "next") => {
     try {
       let newStep = activeStep;
@@ -92,6 +95,10 @@ const ApplicationSteps: FC<ApplicationStepsProps> = ({
         ...prev,
         ...JSON.parse(payload),
       }));
+
+      if (isFormComplete && isLastStep && buttonType === "next") {
+        router.push("/");
+      }
     } catch (error) {
       console.error("Error saving step:", error);
     }
