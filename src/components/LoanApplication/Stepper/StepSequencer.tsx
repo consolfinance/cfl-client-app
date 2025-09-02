@@ -46,16 +46,28 @@ const isStepComplete = (
 const StepSequencer: FC<IStepper> = ({ activeStep, steps, answers, loanSlug }) => {
   return (
     <Card>
-      <Stepper activeId={activeStep} className={styles.stepper}>
-        {steps?.map((step, index) => (
-          <Stepper.Item
-            key={index}
-            title={step.title}
-            subtitle={step.subtitle}
-            completed={isStepComplete(step.step, loanSlug, answers)}
-          />
-        ))}
-      </Stepper>
+      <div className={styles.desktop}>
+        <Stepper activeId={activeStep} className={styles.stepper}>
+          {steps?.map((step, index) => (
+            <Stepper.Item
+              key={index}
+              title={step.title}
+              subtitle={step.subtitle}
+              completed={isStepComplete(step.step, loanSlug, answers)}
+            />
+          ))}
+        </Stepper>
+      </div>
+      <div className={styles.mobile}>
+        <Stepper activeId={activeStep} className={styles.stepper}>
+          {steps?.map((step, index) => (
+            <Stepper.Item
+              key={index}
+              completed={isStepComplete(step.step, loanSlug, answers)}
+            />
+          ))}
+        </Stepper>
+      </div>
     </Card>
   );
 };
