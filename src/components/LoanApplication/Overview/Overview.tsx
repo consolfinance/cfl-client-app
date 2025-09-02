@@ -1,7 +1,7 @@
 "use client";
 
 import { FC, useEffect, useState, Dispatch, SetStateAction } from "react";
-import { Badge, Card, Text, View } from "reshaped";
+import { Badge, Button, Card, Text, View } from "reshaped";
 import ApplicationSteps from "../ApplicationSteps/ApplicationSteps";
 import LoanCalculator from "../LoanCalculator/LoanCalculator";
 import { dummyLoanTypes, loanTypeQuestions } from "@/utils/dummy/loantypes";
@@ -10,6 +10,8 @@ import type { LoanApplicationData } from "@/types/loans";
 
 import { CalculatorValues } from "@/types/loans";
 import styles from "./Overview.module.scss";
+import StepSequencer from "../Stepper/StepSequencer";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 interface OverviewProps {
   loanApplicationData: LoanApplicationData;
   setLoanApplicationData: Dispatch<SetStateAction<LoanApplicationData>>;
@@ -68,27 +70,61 @@ const Overview: FC<OverviewProps> = ({
   useEffect(() => {
     loanTypeQuestions[loanSlug]?.forEach((step) => {
       step.questions.forEach((q) => {
-        if (
-          !loanApplicationData?.answers ||
-          loanApplicationData?.answers[q.key] === undefined ||
-          loanApplicationData?.answers[q.key] === null
-        ) {
-          if (q.type === "boolean") {
-            setLoanApplicationData((prev) => ({
-              ...prev,
-              answers: { ...prev.answers, [q.key]: false },
-            }));
+        q?.subQuestions?.forEach((sq) => {
+          if (!loanApplicationData?.answers[q.key]?.[sq.key]) {
+            if (sq.type === "boolean") {
+              setLoanApplicationData((prev) => ({
+                ...prev,
+                answers: {
+                  ...prev.answers,
+                  [q.key]: {
+                    ...prev.answers[q.key],
+                    [sq.key]: false,
+                  },
+                },
+              }));
+            }
+            if (sq.type === "number") {
+              setLoanApplicationData((prev) => ({
+                ...prev,
+                answers: {
+                  ...prev.answers,
+                  [q.key]: {
+                    ...prev.answers[q.key],
+                    [sq.key]: 0,
+                  },
+                },
+              }));
+            }
+            if (sq.type === "string") {
+              setLoanApplicationData((prev) => ({
+                ...prev,
+                answers: {
+                  ...prev.answers,
+                  [q.key]: {
+                    ...prev.answers[q.key],
+                    [sq.key]: "",
+                  },
+                },
+              }));
+            }
+            if (sq.type === "textarea") {
+              setLoanApplicationData((prev) => ({
+                ...prev,
+                answers: {
+                  ...prev.answers,
+                  [q.key]: {
+                    ...prev.answers[q.key],
+                    [sq.key]: "",
+                  },
+                },
+              }));
+            }
           }
-          if (q.type === "number") {
-            setLoanApplicationData((prev) => ({
-              ...prev,
-              answers: { ...prev.answers, [q.key]: 0 },
-            }));
-          }
-        }
+        });
       });
     });
-  }, [loanSlug, loanApplicationData?.answers]);
+  }, [loanSlug]);
 
   if (!loan) {
     return null;
@@ -129,6 +165,12 @@ const Overview: FC<OverviewProps> = ({
           </View>
         </View>
 
+        <StepSequencer
+          activeStep={activeStep}
+          steps={loanTypeQuestions[loanSlug] || []}
+          setActiveStep={setActiveStep}
+        />
+
         <div className={styles.content}>
           {showCalculator && (
             <LoanCalculator
@@ -144,6 +186,27 @@ const Overview: FC<OverviewProps> = ({
             loanApplicationData={loanApplicationData}
             setLoanApplicationData={setLoanApplicationData}
           />
+        </div>
+
+        <div className={styles.actions}>
+          {activeStep > 0 && (
+            <Button
+              icon={<ArrowLeft />}
+              variant="outline"
+              className={styles.button}
+              onClick={() => setActiveStep(activeStep - 1)}
+            >
+              Previous
+            </Button>
+          )}
+          <Button
+            endIcon={<ArrowRight />}
+            variant="outline"
+            onClick={() => setActiveStep(activeStep + 1)}
+            className={styles.button}
+          >
+            Next
+          </Button>
         </div>
       </View>
     </Card>

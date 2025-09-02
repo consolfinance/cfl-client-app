@@ -104,10 +104,18 @@ const ApplicationSteps: FC<ApplicationStepsProps> = ({
     }
   };
 
+  console.log({ loanApplicationData });
   return (
-    <Card padding={0} className={styles.card}>
-      <View className={styles.root} padding={8} backgroundColor="elevation-overlay">
-        <div className={styles.stepperWrapper}>
+    <>
+      {/* //{" "}
+        <Card padding={0} className={styles.card}>
+          //{" "}
+          <View
+            className={styles.root}
+            padding={8}
+            backgroundColor="elevation-overlay"
+          > */}
+      {/* <div className={styles.stepperWrapper}>
           <Stepper
             activeId={activeStep}
             labelDisplay={{ s: "hidden", m: "inline" }}
@@ -124,33 +132,34 @@ const ApplicationSteps: FC<ApplicationStepsProps> = ({
               />
             ))}
           </Stepper>
-        </div>
+        </div> */}
+      <div className={styles.questionsWrapper}>
+        {loanTypeQuestions[slug]?.[activeStep]?.questions.map((q) => {
+          console.log({ loanApplicationData, q });
 
-        <div className={styles.questionsWrapper}>
-          {loanTypeQuestions[slug]?.[activeStep]?.questions.map((q) => {
-            console.log({ loanApplicationData, q });
-
-            return (
-              <Question
-                key={q.key}
-                question={q}
-                value={
-                  loanApplicationData?.answers
-                    ? loanApplicationData.answers[q.key]
-                    : undefined
-                }
-                onChange={(val) =>
-                  setLoanApplicationData((prev) => ({
-                    ...prev,
-                    answers: { ...prev.answers, [q.key]: val },
-                  }))
-                }
-              />
-            );
-          })}
-        </div>
-
-        <div className={styles.buttons}>
+          return (
+            <Question
+              key={q.key}
+              questionKey={q.key}
+              loanApplicationData={loanApplicationData}
+              setLoanApplicationData={setLoanApplicationData}
+              {...q}
+              // value={
+              //   loanApplicationData?.answers
+              //     ? loanApplicationData.answers[q.key]
+              //     : undefined
+              // }
+              // onChange={(val) =>
+              //   setLoanApplicationData((prev) => ({
+              //     ...prev,
+              //     answers: { ...prev.answers, [q.key]: val },
+              //   }))
+              // }
+            />
+          );
+        })}
+      </div>
+      {/* <div className={styles.buttons}>
           <Button
             className={styles.button}
             variant="solid"
@@ -180,9 +189,12 @@ const ApplicationSteps: FC<ApplicationStepsProps> = ({
           >
             {activeStep === loanTypeQuestions[slug]?.length - 1 ? "Submit" : "Next"}
           </Button>
-        </div>
-      </View>
-    </Card>
+        </div> */}
+      {/* //{" "}
+        </View>
+        //{" "}
+      </Card> */}
+    </>
   );
 };
 
