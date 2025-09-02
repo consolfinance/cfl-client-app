@@ -29,16 +29,16 @@ export const dummyLoanTypes = [
   {
     id: 1,
     type: "personal",
-    slug: "salary-advance",
-    name: "Salary Advance Loan",
-    description: "A short-term loan to cover urgent personal expenses.",
+    slug: "credit-builder",
+    name: "Credit Builder Loan",
+    description: "Build trust and prove repayment.",
   },
   {
     id: 2,
     type: "personal",
-    slug: "personal-installment",
-    name: "Personal Installment Loan",
-    description: "A personal loan repayable in flexible installments.",
+    slug: "growth-loan",
+    name: "Growth Loan",
+    description: "Longer terms, lower fees, more flexibility.",
   },
   {
     id: 3,
@@ -50,14 +50,14 @@ export const dummyLoanTypes = [
   {
     id: 4,
     type: "business",
-    slug: "sme-working-capital",
-    name: "SME Working Capital Loan",
-    description: "A loan to strengthen cash flow for small and medium businesses.",
+    slug: "business-boost",
+    name: "Business Boost Loan",
+    description: "Working capital for SMEs and small traders.",
   },
 ];
 
 export const loanTypeQuestions = {
-  "salary-advance": [
+  "credit-builder": [
     {
       step: 0,
       title: "Your Details",
@@ -529,7 +529,7 @@ export const loanTypeQuestions = {
     },
   ],
 
-  "personal-installment": [
+  "growth-loan": [
     {
       step: 0,
       title: "Your Details",
@@ -1473,7 +1473,7 @@ export const loanTypeQuestions = {
     },
   ],
 
-  "sme-working-capital": [
+  "business-boost": [
     {
       step: 0,
       title: "Your Details",
