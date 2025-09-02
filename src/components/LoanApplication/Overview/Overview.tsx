@@ -71,14 +71,14 @@ const Overview: FC<OverviewProps> = ({
     loanTypeQuestions[loanSlug]?.forEach((step) => {
       step.questions.forEach((q) => {
         q?.subQuestions?.forEach((sq) => {
-          if (!loanApplicationData?.answers[q.key]?.[sq.key]) {
+          if (!loanApplicationData?.answers?.[q?.key]?.[sq?.key]) {
             if (sq.type === "boolean") {
               setLoanApplicationData((prev) => ({
                 ...prev,
                 answers: {
                   ...prev.answers,
                   [q.key]: {
-                    ...prev.answers[q.key],
+                    ...prev?.answers?.[q.key],
                     [sq.key]: false,
                   },
                 },
@@ -90,7 +90,7 @@ const Overview: FC<OverviewProps> = ({
                 answers: {
                   ...prev.answers,
                   [q.key]: {
-                    ...prev.answers[q.key],
+                    ...prev?.answers?.[q.key],
                     [sq.key]: 0,
                   },
                 },
@@ -102,8 +102,8 @@ const Overview: FC<OverviewProps> = ({
                 answers: {
                   ...prev.answers,
                   [q.key]: {
-                    ...prev.answers[q.key],
-                    [sq.key]: "",
+                    ...prev?.answers?.[q.key],
+                    [sq?.key]: "",
                   },
                 },
               }));
@@ -114,8 +114,8 @@ const Overview: FC<OverviewProps> = ({
                 answers: {
                   ...prev.answers,
                   [q.key]: {
-                    ...prev.answers[q.key],
-                    [sq.key]: "",
+                    ...prev?.answers?.[q.key],
+                    [sq?.key]: "",
                   },
                 },
               }));

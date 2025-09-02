@@ -10,6 +10,7 @@ import {
   Radio,
   RadioGroup,
   TextArea,
+  Checkbox,
 } from "reshaped";
 import type { Question, SubQuestion } from "@/utils/dummy/loantypes";
 import styles from "./Question.module.scss";
@@ -36,10 +37,10 @@ const Question: FC<QuestionProps> = ({
   });
 
   const getInput = (sq: SubQuestion) => {
-    const value = loanApplicationData.answers[questionKey]?.[sq.key] ?? "";
+    const value = loanApplicationData?.answers?.[questionKey]?.[sq?.key] ?? "";
     console.log({ value });
     const numberValue = Number(
-      loanApplicationData.answers[questionKey]?.[sq.key] ?? 0
+      loanApplicationData?.answers?.[questionKey]?.[sq?.key] ?? 0
     );
 
     const handleChange = (val: unknown) => {
@@ -102,6 +103,19 @@ const Question: FC<QuestionProps> = ({
           </RadioGroup>
         );
 
+      case "checkbox":
+        return (
+          <View className={styles.checkboxContainer}>
+            <Checkbox
+              name={sq.key}
+              checked={Boolean(value)}
+              onChange={({ checked }) => handleChange(checked)}
+            >
+              {sq.checkboxText}
+            </Checkbox>
+          </View>
+        );
+
       // Uncomment and implement as needed:
       // case "boolean":
       //   return (
@@ -131,6 +145,11 @@ const Question: FC<QuestionProps> = ({
                   <Text variant="body-3">{sq.label}</Text>
                   {sq.required && <Text color="critical">*</Text>}
                 </View>
+                {sq.subtitle && (
+                  <Text variant="caption-1" color="neutral-faded">
+                    {sq.subtitle}
+                  </Text>
+                )}
 
                 <View>{getInput(sq)}</View>
               </View>

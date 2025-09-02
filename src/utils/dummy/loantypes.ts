@@ -3,10 +3,19 @@ import { Placeholder } from "reshaped";
 export type SubQuestion = {
   key: string;
   label: string;
+  subtitle?: string;
   placeholder?: string;
   required?: boolean;
-  type: "string" | "boolean" | "number" | "radio" | "select" | "textarea";
+  type:
+    | "string"
+    | "boolean"
+    | "number"
+    | "radio"
+    | "select"
+    | "textarea"
+    | "checkbox";
   enum?: { label: string; value: string }[];
+  checkboxText?: string;
   weight: number;
 };
 
@@ -384,6 +393,201 @@ export const loanTypeQuestions = {
                 { label: "6-10%", value: "6-10%" },
                 { label: "> 10%", value: "more_than_10%" },
               ],
+              weight: 5,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      step: 4,
+      title: "Loan Request",
+      subtitle: "Credit & Governance",
+      questions: [
+        {
+          key: "crb_authorisation",
+          label: "Credit Authorisation",
+          subQuestions: [
+            {
+              key: "authorisation",
+              label: "",
+              checkboxText:
+                "I authorize CFL to pull my business/related party CRB report(s) for the last 24 months.",
+              required: false,
+              type: "checkbox",
+              weight: 5,
+            },
+          ],
+        },
+        {
+          key: "payment_behaviour",
+          label: "Payment Behaviour",
+          subQuestions: [
+            {
+              key: "supplier_payment_behaviour",
+              label: "Supplier Payment Behaviour",
+              subtitle:
+                "In the last 12 months, how often were supplier payments made on time (per agreed terms)?",
+              required: false,
+              type: "radio",
+              enum: [
+                { label: "Always (≥95%)", value: "always" },
+                { label: "Usually (80-94%)", value: "usually" },
+                { label: "Sometimes (50-79%)", value: "sometimes" },
+                { label: "Rarely (<50%)", value: "rarely" },
+              ],
+              weight: 5,
+            },
+            {
+              key: "supplier_payment_behaviour_utilities",
+              label: "Supplier Payment Behaviour",
+              subtitle:
+                "Utility bills (electricity/water) for the trading site in the last 6 months were:",
+              required: false,
+              type: "radio",
+              enum: [
+                { label: "All paid on time", value: "all_paid_on_time" },
+                { label: "1-2 late payments", value: "1_2_late_payments" },
+                {
+                  label: "3+ late payments/disconnections",
+                  value: "3+_late_payments_disconnections",
+                },
+              ],
+              weight: 5,
+            },
+          ],
+        },
+        {
+          key: "governance_signals",
+          label: "Governance Signals",
+          subQuestions: [
+            {
+              key: "director_changes",
+              label: "Director Changes",
+              subtitle: "Director/authorized signatory changes in last 24 months:",
+              required: false,
+              type: "radio",
+              enum: [
+                { label: "None", value: "none" },
+                { label: "1 change", value: "1_change" },
+                {
+                  label: "2+ frequent changes",
+                  value: "2_or_more_frequent_changes",
+                },
+              ],
+              weight: 5,
+            },
+            {
+              key: "related_party_exposure",
+              label: "Related Party Exposure",
+              subtitle: "Related-party exposure (sales to director-owned entities):",
+              required: false,
+              type: "radio",
+              enum: [
+                { label: "None/immaterial", value: "none" },
+                { label: "Some (≤20% of revenue)", value: "some" },
+                {
+                  label: "High (>20% of revenue)",
+                  value: "high",
+                },
+              ],
+              weight: 5,
+            },
+          ],
+        },
+        {
+          key: "sector_and_location",
+          label: "Sector and Location",
+          subQuestions: [
+            {
+              key: "sector",
+              label: "Sector (choose closest)",
+              required: true,
+              type: "radio",
+              enum: [
+                { label: "Agriculture", value: "agriculture" },
+                { label: "Trading & Wholesale", value: "trading_and_wholesale" },
+                { label: "Retail", value: "retail" },
+                { label: "Manufacturing", value: "manufacturing" },
+                { label: "Transport & Logistics", value: "transport_and_logistics" },
+                { label: "Hospitality", value: "hospitality" },
+                { label: "Services", value: "services" },
+                { label: "Other", value: "other" },
+              ],
+              weight: 5,
+            },
+            {
+              key: "operating_district",
+              label: "Operating District",
+              placeholder: "E.g. Blantyre, Lilongwe",
+              required: true,
+              type: "string",
+              weight: 5,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      step: 5,
+      title: "Submit Application",
+      subtitle: "Review & Confirm",
+      questions: [
+        {
+          key: "payment_preferences",
+          label: "Repayment Preferences",
+          subQuestions: [
+            {
+              key: "preferred_repayment_mode",
+              label: "Preferred Repayment Mode",
+              required: true,
+              type: "radio",
+              enum: [
+                { label: "Monthly equal installments", value: "monthly" },
+                { label: "Weekly/Fortnightly schedule", value: "weekly" },
+                { label: "Cash-Flow Seasonality", value: "bi_annually" },
+                { label: "Annually", value: "annually" },
+              ],
+              weight: 5,
+            },
+            {
+              key: "seasonality_pattern",
+              label: "Seasonality Pattern",
+              subtitle: "Are there months with significantly higher or lower sales?",
+              required: true,
+              type: "radio",
+              enum: [
+                { label: "Yes", value: "yes" },
+                { label: "No / Minor variation", value: "no" },
+              ],
+              weight: 5,
+            },
+            {
+              key: "financial_management_support",
+              label: "Financial Management Support",
+              subtitle:
+                "Would you like free financial literacy content or mentorship?",
+              required: false,
+              type: "radio",
+              enum: [
+                { label: "Yes", value: "yes" },
+                { label: "No", value: "no" },
+              ],
+              weight: 5,
+            },
+          ],
+        },
+        {
+          key: "additional_information",
+          label: "Additional Information",
+          subQuestions: [
+            {
+              key: "additional_info",
+              label: "Additional Notes to Credit Officer (optional)",
+              placeholder:
+                "Any additional information you'd like to share with the credit officer",
+              required: false,
+              type: "textarea",
               weight: 5,
             },
           ],
