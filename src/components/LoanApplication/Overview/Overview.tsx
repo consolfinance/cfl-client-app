@@ -1,8 +1,8 @@
 "use client";
 
 import { FC, useEffect, useState, Dispatch, SetStateAction } from "react";
-import { Badge, Button, Card, Text, View } from "reshaped";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { Badge, Button, Card, Text, useToast, View } from "reshaped";
+import { ArrowLeft, ArrowRight, XCircle } from "lucide-react";
 import ApplicationSteps from "../ApplicationSteps/ApplicationSteps";
 import LoanCalculator from "../LoanCalculator/LoanCalculator";
 import {
@@ -33,6 +33,8 @@ const Overview: FC<OverviewProps> = ({
   loanApplicationData,
   setLoanApplicationData,
 }) => {
+  const toast = useToast();
+
   const { loanType, loanSlug } = loanApplicationData;
   const [calculatorValues, setCalculatorValues] = useState<CalculatorValues>({
     amount: 0,
@@ -112,6 +114,14 @@ const Overview: FC<OverviewProps> = ({
 
       if (!isStepComplete(activeStep, loanApplicationData.answers)) {
         // Show an error message or highlight the incomplete fields
+        toast.show({
+          title: "Error",
+          text: "Please fill all required fields.",
+          color: "critical",
+          icon: <XCircle />,
+          size: "large",
+          position: "top-end",
+        });
         console.error("Please fill all required fields");
         return;
       }
