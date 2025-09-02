@@ -1,8 +1,8 @@
 "use client";
 
 import { FC, useEffect, useState, Dispatch, SetStateAction } from "react";
-import { Badge, Button, Card, Text, View } from "reshaped";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { Badge, Button, Card, Text, useToast, View } from "reshaped";
+import { ArrowLeft, ArrowRight, XCircle } from "lucide-react";
 import ApplicationSteps from "../ApplicationSteps/ApplicationSteps";
 import LoanCalculator from "../LoanCalculator/LoanCalculator";
 import {
@@ -13,6 +13,7 @@ import {
 import type { Question } from "@/utils/dummy/loantypes";
 import type { LoanApplicationData } from "@/types/loans";
 
+import SuccessModal from "./SuccessModal";
 import StepSequencer from "../Stepper/StepSequencer";
 import { CalculatorValues } from "@/types/loans";
 import styles from "./Overview.module.scss";
@@ -33,7 +34,10 @@ const Overview: FC<OverviewProps> = ({
   loanApplicationData,
   setLoanApplicationData,
 }) => {
+  const toast = useToast();
+
   const { loanType, loanSlug } = loanApplicationData;
+  const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
   const [calculatorValues, setCalculatorValues] = useState<CalculatorValues>({
     amount: 0,
     term: 0,
@@ -112,6 +116,14 @@ const Overview: FC<OverviewProps> = ({
 
       if (!isStepComplete(activeStep, loanApplicationData.answers)) {
         // Show an error message or highlight the incomplete fields
+        toast.show({
+          title: "Error",
+          text: "Please fill all required fields.",
+          color: "critical",
+          icon: <XCircle />,
+          size: "large",
+          position: "top-end",
+        });
         console.error("Please fill all required fields");
         return;
       }
@@ -167,6 +179,10 @@ const Overview: FC<OverviewProps> = ({
         ...prev,
         ...JSON.parse(payload),
       }));
+
+      if (isLastStep) {
+        setShowSuccessModal(true);
+      }
     } catch (error) {
       console.error("Error saving step:", error);
     }
@@ -292,91 +308,97 @@ const Overview: FC<OverviewProps> = ({
   }
 
   return (
-    <Card padding={0} className={styles.card}>
-      <View
-        gap={4}
-        padding={6}
-        className={styles.root}
-        backgroundColor="elevation-base"
-      >
-        <View align="center" gap={2} justify={"space-between"} direction={"row"}>
-          <Text variant="featured-2" color="primary">
-            {loan.name}
-          </Text>
-
+    <>
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+      />
+      <Card padding={0} className={styles.card}>
+        <View
+          gap={4}
+          padding={6}
+          className={styles.root}
+          backgroundColor="elevation-base"
+        >
           <View align="center" gap={2} justify={"space-between"} direction={"row"}>
-            {loanApplicationData.applicationStatus !== "draft" && (
-              <View direction={"row"} gap={2} align="center">
-                <Text variant="body-1" color="neutral">
-                  Your Score:{" "}
-                </Text>
-                <Text variant="body-1" color={scoreColor} weight={"bold"}>
-                  {loanApplicationData?.score || 0} (
-                  {loanApplicationData?.grade || "N/A"})
-                </Text>
-              </View>
-            )}
-            <Badge color={badgeColor} size="large" className={styles.statusBadge}>
-              {loanApplicationData?.applicationStatus || "draft"}
-            </Badge>
+            <Text variant="featured-2" color="primary">
+              {loan.name}
+            </Text>
+
+            <View align="center" gap={2} justify={"space-between"} direction={"row"}>
+              {loanApplicationData.applicationStatus !== "draft" && (
+                <View direction={"row"} gap={2} align="center">
+                  <Text variant="body-1" color="neutral">
+                    Your Score:{" "}
+                  </Text>
+                  <Text variant="body-1" color={scoreColor} weight={"bold"}>
+                    {loanApplicationData?.score || 0} (
+                    {loanApplicationData?.grade || "N/A"})
+                  </Text>
+                </View>
+              )}
+              <Badge color={badgeColor} size="large" className={styles.statusBadge}>
+                {loanApplicationData?.applicationStatus || "draft"}
+              </Badge>
+            </View>
           </View>
-        </View>
 
-        <StepSequencer
-          activeStep={activeStep}
-          steps={(loanTypeQuestions[loanSlug] || []) as Step[]}
-          setActiveStep={setActiveStep}
-          loanSlug={loanSlug}
-          answers={loanApplicationData.answers}
-        />
-
-        <div className={styles.content}>
-          {showCalculator && (
-            <LoanCalculator
-              values={calculatorValues}
-              onChange={setCalculatorValues}
-            />
-          )}
-
-          <ApplicationSteps
+          <StepSequencer
             activeStep={activeStep}
+            steps={(loanTypeQuestions[loanSlug] || []) as Step[]}
             setActiveStep={setActiveStep}
-            slug={loanSlug}
-            loanApplicationData={loanApplicationData}
-            setLoanApplicationData={setLoanApplicationData}
+            loanSlug={loanSlug}
+            answers={loanApplicationData.answers}
           />
-        </div>
 
-        <div className={styles.actions}>
-          {activeStep > 0 && (
+          <div className={styles.content}>
+            {showCalculator && (
+              <LoanCalculator
+                values={calculatorValues}
+                onChange={setCalculatorValues}
+              />
+            )}
+
+            <ApplicationSteps
+              activeStep={activeStep}
+              setActiveStep={setActiveStep}
+              slug={loanSlug}
+              loanApplicationData={loanApplicationData}
+              setLoanApplicationData={setLoanApplicationData}
+            />
+          </div>
+
+          <div className={styles.actions}>
+            {activeStep > 0 && (
+              <Button
+                icon={<ArrowLeft />}
+                variant="outline"
+                className={styles.button}
+                onClick={handleBack}
+                color="primary"
+              >
+                Previous
+              </Button>
+            )}
             <Button
-              icon={<ArrowLeft />}
-              variant="outline"
+              endIcon={<ArrowRight />}
+              variant={
+                activeStep === (loanTypeQuestions[loanSlug]?.length || 1) - 1
+                  ? "solid"
+                  : "outline"
+              }
+              onClick={handleNext}
               className={styles.button}
-              onClick={handleBack}
               color="primary"
             >
-              Previous
+              {activeStep === (loanTypeQuestions[loanSlug]?.length || 1) - 1
+                ? "Submit"
+                : "Next"}
             </Button>
-          )}
-          <Button
-            endIcon={<ArrowRight />}
-            variant={
-              activeStep === (loanTypeQuestions[loanSlug]?.length || 1) - 1
-                ? "solid"
-                : "outline"
-            }
-            onClick={handleNext}
-            className={styles.button}
-            color="primary"
-          >
-            {activeStep === (loanTypeQuestions[loanSlug]?.length || 1) - 1
-              ? "Submit"
-              : "Next"}
-          </Button>
-        </div>
-      </View>
-    </Card>
+          </div>
+        </View>
+      </Card>
+    </>
   );
 };
 
