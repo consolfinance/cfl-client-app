@@ -57,13 +57,15 @@ const LoanCard: FC<LoanCardProps> = ({ id, type, slug, name, description }) => {
               </Text>
               <Badge
                 size="medium"
+                color="positive"
                 className={classNames(styles.badge, {
-                  [styles.personal]: type === "personal",
-                  [styles.business]: type === "business",
+                  // [styles.personal]: type === "personal",
+                  // [styles.business]: type === "business",
                 })}
               >
-                <Text>{type}</Text>
+                <Text color="positive">{type}</Text>
               </Badge>
+              {/* <Text color="positive">{type}</Text> */}
             </div>
             <div className={styles.description}>
               <Text variant="body-3" color="neutral">
