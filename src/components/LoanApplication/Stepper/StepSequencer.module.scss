@@ -1,0 +1,17 @@
+@use "@/styles/abstracts/variables" as *;
+@use "@/styles/abstracts/mixins" as *;
+@use "@/styles/abstracts/placeholders" as *;
+
+.desktop {
+  display: none;
+  @include min($tablet-s) {
+    display: block;
+  }
+}
+
+.mobile {
+  display: none;
+  @include max($tablet-s) {
+    display: block;
+  }
+}

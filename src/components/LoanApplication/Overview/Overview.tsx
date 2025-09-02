@@ -2,6 +2,7 @@
 
 import { FC, useEffect, useState, Dispatch, SetStateAction } from "react";
 import { Badge, Button, Card, Text, View } from "reshaped";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import ApplicationSteps from "../ApplicationSteps/ApplicationSteps";
 import LoanCalculator from "../LoanCalculator/LoanCalculator";
 import {
@@ -12,10 +13,17 @@ import {
 import type { Question } from "@/utils/dummy/loantypes";
 import type { LoanApplicationData } from "@/types/loans";
 
+import StepSequencer from "../Stepper/StepSequencer";
 import { CalculatorValues } from "@/types/loans";
 import styles from "./Overview.module.scss";
-import StepSequencer from "../Stepper/StepSequencer";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+
+interface Step {
+  step: number;
+  title: string;
+  subtitle: string;
+  questions: Question[];
+}
+
 interface OverviewProps {
   loanApplicationData: LoanApplicationData;
   setLoanApplicationData: Dispatch<SetStateAction<LoanApplicationData>>;
@@ -90,7 +98,7 @@ const Overview: FC<OverviewProps> = ({
         if (!subQuestion.required) return true;
 
         const answerValue = answers?.[question.key]?.[subQuestion.key];
-        console.log({ currentStep, stepData, answerValue, subQuestion });
+
         // Check that required value is not undefined, null, or empty string
         return (
           answerValue !== undefined && answerValue !== null && answerValue !== ""
@@ -316,8 +324,10 @@ const Overview: FC<OverviewProps> = ({
 
         <StepSequencer
           activeStep={activeStep}
-          steps={loanTypeQuestions[loanSlug] || []}
+          steps={(loanTypeQuestions[loanSlug] || []) as Step[]}
           setActiveStep={setActiveStep}
+          loanSlug={loanSlug}
+          answers={loanApplicationData.answers}
         />
 
         <div className={styles.content}>
