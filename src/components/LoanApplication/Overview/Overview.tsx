@@ -4,8 +4,12 @@ import { FC, useEffect, useState, Dispatch, SetStateAction } from "react";
 import { Badge, Button, Card, Text, View } from "reshaped";
 import ApplicationSteps from "../ApplicationSteps/ApplicationSteps";
 import LoanCalculator from "../LoanCalculator/LoanCalculator";
-import { dummyLoanTypes, loanTypeQuestions } from "@/utils/dummy/loantypes";
-import type {} from "@/utils/dummy/loantypes";
+import {
+  computeScore,
+  dummyLoanTypes,
+  loanTypeQuestions,
+} from "@/utils/dummy/loantypes";
+import type { Question } from "@/utils/dummy/loantypes";
 import type { LoanApplicationData } from "@/types/loans";
 
 import { CalculatorValues } from "@/types/loans";
@@ -27,6 +31,12 @@ const Overview: FC<OverviewProps> = ({
     term: 0,
     interestRate: 0,
   });
+  const [scoreColor, setScoreColor] = useState<
+    "positive" | "warning" | "critical" | "neutral"
+  >("neutral");
+  const [badgeColor, setBadgeColor] = useState<
+    "positive" | "warning" | "critical" | "neutral"
+  >("neutral");
 
   const [activeStep, setActiveStep] = useState(
     loanApplicationData?.currentStep || 0
@@ -53,7 +63,6 @@ const Overview: FC<OverviewProps> = ({
         return "neutral";
     }
   };
-
   const getScoreColor = () => {
     switch (loanApplicationData.grade) {
       case "A":
@@ -66,6 +75,150 @@ const Overview: FC<OverviewProps> = ({
         return "critical";
     }
   };
+
+  const isStepComplete = (
+    currentStep: number,
+    answers: { [key: string]: { [key: string]: unknown } }
+  ): boolean => {
+    const stepData = loanTypeQuestions[loanSlug]?.find(
+      (step) => step.step === currentStep
+    );
+    if (!stepData) return false;
+
+    return stepData.questions.every((question) =>
+      question.subQuestions.every((subQuestion) => {
+        if (!subQuestion.required) return true;
+
+        const answerValue = answers?.[question.key]?.[subQuestion.key];
+        console.log({ currentStep, stepData, answerValue, subQuestion });
+        // Check that required value is not undefined, null, or empty string
+        return (
+          answerValue !== undefined && answerValue !== null && answerValue !== ""
+        );
+      })
+    );
+  };
+  const handleNext = async () => {
+    try {
+      // First check if all required fields are filled
+
+      if (!isStepComplete(activeStep, loanApplicationData.answers)) {
+        // Show an error message or highlight the incomplete fields
+        console.error("Please fill all required fields");
+        return;
+      }
+
+      const nextStep = Math.min(
+        activeStep + 1,
+        (loanTypeQuestions[loanSlug]?.length || 1) - 1
+      );
+
+      const isLastStep =
+        activeStep === (loanTypeQuestions[loanSlug]?.length || 1) - 1;
+
+      const questions = loanTypeQuestions["set-up-loan"].flatMap(
+        (step) => step.questions
+      );
+
+      const scoreData = isLastStep
+        ? computeScore(loanApplicationData.answers, questions as Question[])
+        : { score: loanApplicationData.score, grade: loanApplicationData.grade };
+
+      const payload = JSON.stringify({
+        ...loanApplicationData,
+        currentStep: nextStep,
+        isComplete: isLastStep,
+        applicationStatus: isLastStep ? "submitted" : "draft",
+        ...scoreData,
+        createdAt: undefined,
+        updatedAt: undefined,
+        locale: undefined,
+        publishedAt: undefined,
+      });
+
+      const response = await fetch(
+        `/api/application/${loanApplicationData.documentId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: payload,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to save application step");
+      }
+
+      // Proceed to the next step
+      setActiveStep((prev) =>
+        Math.min(prev + 1, loanTypeQuestions[loanSlug]?.length - 1)
+      );
+      setLoanApplicationData((prev) => ({
+        ...prev,
+        ...JSON.parse(payload),
+      }));
+    } catch (error) {
+      console.error("Error saving step:", error);
+    }
+  };
+
+  const handleBack = async () => {
+    try {
+      const payload = {
+        ...loanApplicationData,
+        currentStep: activeStep - 1,
+        applicationStatus: "draft",
+        isComplete: false,
+        score: null,
+        grade: null,
+        createdAt: undefined,
+        updatedAt: undefined,
+        locale: undefined,
+        publishedAt: undefined,
+      };
+
+      const response = await fetch(
+        `/api/application/${loanApplicationData.documentId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to save application step");
+      }
+
+      setActiveStep((prev) => Math.max(prev - 1, 0));
+      setLoanApplicationData((prev) => ({
+        ...prev,
+        currentStep: activeStep - 1,
+        applicationStatus: "draft",
+        isComplete: false,
+        score: 0,
+        grade: "",
+      }));
+    } catch (error) {
+      console.error("Error saving step:", error);
+    }
+  };
+
+  useEffect(() => {
+    console.log(`%c--> In UseEffect`, "color: blue;", { loanApplicationData });
+    const newBadgeColor = getBadgeColor();
+    setBadgeColor(newBadgeColor);
+    const newScoreColor = getScoreColor();
+    setScoreColor(newScoreColor);
+  }, [
+    loanApplicationData,
+    loanApplicationData.applicationStatus,
+    loanApplicationData.score,
+  ]);
 
   useEffect(() => {
     loanTypeQuestions[loanSlug]?.forEach((step) => {
@@ -149,17 +302,13 @@ const Overview: FC<OverviewProps> = ({
                 <Text variant="body-1" color="neutral">
                   Your Score:{" "}
                 </Text>
-                <Text variant="body-1" color={getScoreColor()} weight={"bold"}>
+                <Text variant="body-1" color={scoreColor} weight={"bold"}>
                   {loanApplicationData?.score || 0} (
                   {loanApplicationData?.grade || "N/A"})
                 </Text>
               </View>
             )}
-            <Badge
-              color={getBadgeColor()}
-              size="large"
-              className={styles.statusBadge}
-            >
+            <Badge color={badgeColor} size="large" className={styles.statusBadge}>
               {loanApplicationData?.applicationStatus || "draft"}
             </Badge>
           </View>
@@ -194,18 +343,26 @@ const Overview: FC<OverviewProps> = ({
               icon={<ArrowLeft />}
               variant="outline"
               className={styles.button}
-              onClick={() => setActiveStep(activeStep - 1)}
+              onClick={handleBack}
+              color="primary"
             >
               Previous
             </Button>
           )}
           <Button
             endIcon={<ArrowRight />}
-            variant="outline"
-            onClick={() => setActiveStep(activeStep + 1)}
+            variant={
+              activeStep === (loanTypeQuestions[loanSlug]?.length || 1) - 1
+                ? "solid"
+                : "outline"
+            }
+            onClick={handleNext}
             className={styles.button}
+            color="primary"
           >
-            Next
+            {activeStep === (loanTypeQuestions[loanSlug]?.length || 1) - 1
+              ? "Submit"
+              : "Next"}
           </Button>
         </div>
       </View>

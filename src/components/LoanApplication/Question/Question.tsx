@@ -49,7 +49,7 @@ const Question: FC<QuestionProps> = ({
         answers: {
           ...prev.answers,
           [questionKey]: {
-            ...prev.answers[questionKey],
+            ...prev.answers?.[questionKey],
             [sq.key]: val,
           },
         },
