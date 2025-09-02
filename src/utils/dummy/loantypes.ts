@@ -1,5 +1,3 @@
-import { Placeholder } from "reshaped";
-
 export type SubQuestion = {
   key: string;
   label: string;
@@ -205,6 +203,7 @@ export const loanTypeQuestions = {
                 { label: "Overdraft", value: "overdraft" },
                 { label: "Other", value: "other" },
               ],
+              weight: 5,
             },
             {
               key: "amount_requested",
@@ -676,6 +675,7 @@ export const loanTypeQuestions = {
                 { label: "Overdraft", value: "overdraft" },
                 { label: "Other", value: "other" },
               ],
+              weight: 5,
             },
             {
               key: "amount_requested",
@@ -1147,6 +1147,7 @@ export const loanTypeQuestions = {
                 { label: "Overdraft", value: "overdraft" },
                 { label: "Other", value: "other" },
               ],
+              weight: 5,
             },
             {
               key: "amount_requested",
@@ -1618,6 +1619,7 @@ export const loanTypeQuestions = {
                 { label: "Overdraft", value: "overdraft" },
                 { label: "Other", value: "other" },
               ],
+              weight: 5,
             },
             {
               key: "amount_requested",
