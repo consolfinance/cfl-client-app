@@ -170,7 +170,7 @@ const Auth: FC<IAuth> = ({ action }) => {
 
   return (
     <Card className={styles.authCard} elevated padding={0}>
-      <View className={styles.root} backgroundColor="neutral" padding={8}>
+      <View className={styles.root} backgroundColor="elevation-base" padding={8}>
         <View direction="row" justify="center" width="100%" align={"center"} gap={2}>
           <Image src={CFLLogo} alt="Consol Finance" width={22} height={22} />
           <Text
