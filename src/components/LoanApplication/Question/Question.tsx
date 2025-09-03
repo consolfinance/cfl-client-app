@@ -11,10 +11,12 @@ import {
   RadioGroup,
   TextArea,
   Checkbox,
+  Button,
 } from "reshaped";
 import type { Question, SubQuestion } from "@/utils/dummy/loantypes";
 import styles from "./Question.module.scss";
 import { LoanApplicationData } from "@/types/loans";
+import { UploadIcon } from "lucide-react";
 
 type QuestionProps = Question & {
   questionKey: string;
@@ -23,22 +25,14 @@ type QuestionProps = Question & {
 };
 
 const Question: FC<QuestionProps> = ({
-  key,
   label,
   subQuestions,
   questionKey,
   loanApplicationData,
   setLoanApplicationData,
 }) => {
-  console.log(`%c--> im justy happy to be here`, "color:#bada55", {
-    key,
-    label,
-    subQuestions,
-  });
-
   const getInput = (sq: SubQuestion) => {
     const value = loanApplicationData?.answers?.[questionKey]?.[sq?.key] ?? "";
-    console.log({ value });
     const numberValue = Number(
       loanApplicationData?.answers?.[questionKey]?.[sq?.key] ?? 0
     );
@@ -139,20 +133,41 @@ const Question: FC<QuestionProps> = ({
 
         <View direction="column" gap={4}>
           {subQuestions.map((sq) => {
-            return (
-              <View gap={1} key={sq.key}>
-                <View direction="row">
-                  <Text variant="body-3">{sq.label}</Text>
-                  {sq.required && <Text color="critical">*</Text>}
-                </View>
-                {sq.subtitle && (
-                  <Text variant="caption-1" color="neutral-faded">
-                    {sq.subtitle}
-                  </Text>
-                )}
+            if (sq.type !== "fileUpload") {
+              return (
+                <View gap={1} key={sq.key}>
+                  <View direction="row">
+                    <Text variant="body-3">{sq.label}</Text>
+                    {sq.required && <Text color="critical">*</Text>}
+                  </View>
+                  {sq.subtitle && (
+                    <Text variant="caption-1" color="neutral-faded">
+                      {sq.subtitle}
+                    </Text>
+                  )}
 
-                <View>{getInput(sq)}</View>
-              </View>
+                  <View>{getInput(sq)}</View>
+                </View>
+              );
+            }
+
+            return (
+              <Card key={sq.key}>
+                <View direction="row" align="center" gap={2} justify="space-between">
+                  <View direction="row" align="center" gap={2}>
+                    <Checkbox name={sq.key} />
+                    <Text>{sq.label}</Text>
+                  </View>
+
+                  <Button
+                    variant="outline"
+                    color="primary"
+                    icon={<UploadIcon width={20} />}
+                  >
+                    Upload
+                  </Button>
+                </View>
+              </Card>
             );
           })}
         </View>

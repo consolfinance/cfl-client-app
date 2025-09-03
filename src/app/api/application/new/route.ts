@@ -5,7 +5,6 @@ import axios from "axios";
 export async function POST(request: Request) {
   try {
     const token = (await cookies()).get("token")?.value;
-    console.log({ token });
     if (!token) {
       return new Response("Unauthorized", { status: 401 });
     }

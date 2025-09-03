@@ -14,11 +14,6 @@ export default async function ApplyPage({
   // Find the corresponding loan type from dummy data
   const matchedLoan = dummyLoanTypes.find((loan) => loan.slug === loanId);
 
-  console.log({
-    matchedLoan,
-    // dummyLoanTypes,
-    loanId,
-  });
   if (!matchedLoan) {
     // If the loan doesn't exist, redirect to 404 or a fallback
     return redirect("/404");
@@ -32,10 +27,6 @@ export default async function ApplyPage({
     description: matchedLoan.description,
     step: 1,
   };
-  console.log({
-    payload,
-    url: `${process.env.NEXT_PUBLIC_APP_URL}/api/application/new`,
-  });
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_APP_URL}/api/application/new`,

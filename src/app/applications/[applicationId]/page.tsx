@@ -25,7 +25,6 @@ const LoanApplicationPage: FC = () => {
         throw new Error("Failed to fetch application details");
       }
       const data = await response.json();
-      console.log("Application Details:", data);
       setLoanApplicationData(data);
     } catch (error) {
       console.error("Error fetching application details:", error);
