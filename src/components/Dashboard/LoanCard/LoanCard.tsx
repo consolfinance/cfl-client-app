@@ -47,43 +47,43 @@ const LoanCard: FC<LoanCardProps> = ({ type, slug, name, description }) => {
 
   return (
     <div className={styles.root}>
-      <Card padding={0}>
-        <View backgroundColor="elevation-overlay" padding={4}>
-          <div className={styles.content}>
-            <div className={styles.header}>
-              <Text variant="body-2" color="primary">
-                {name}
-              </Text>
-              <Badge
-                size="medium"
-                color="positive"
-                className={classNames(styles.badge, {
-                  // [styles.personal]: type === "personal",
-                  // [styles.business]: type === "business",
-                })}
-              >
-                <Text color="positive">{type}</Text>
-              </Badge>
-              {/* <Text color="positive">{type}</Text> */}
+      <View borderRadius={"medium"} borderColor={"primary"}>
+        <Card padding={0}>
+          <View backgroundColor="elevation-overlay" padding={4}>
+            <div className={styles.content}>
+              <div className={styles.header}>
+                <Text variant="body-1" color="primary">
+                  {name}
+                </Text>
+                <Badge
+                  size="large"
+                  variant="faded"
+                  className={classNames(styles.badge)}
+                >
+                  <Text color="positive" weight={"bold"}>
+                    {type}
+                  </Text>
+                </Badge>
+              </div>
+              <div className={styles.description}>
+                <Text variant="body-3" color="neutral">
+                  {description}
+                </Text>
+              </div>
+              <div className={styles.footer}>
+                <Button
+                  variant="solid"
+                  color="primary"
+                  className={styles.button}
+                  onClick={handleApplyNow}
+                >
+                  Apply Now
+                </Button>
+              </div>
             </div>
-            <div className={styles.description}>
-              <Text variant="body-3" color="neutral">
-                {description}
-              </Text>
-            </div>
-            <div className={styles.footer}>
-              <Button
-                variant="solid"
-                color="primary"
-                className={styles.button}
-                onClick={handleApplyNow}
-              >
-                Apply Now
-              </Button>
-            </div>
-          </div>
-        </View>
-      </Card>
+          </View>
+        </Card>
+      </View>
     </div>
   );
 };

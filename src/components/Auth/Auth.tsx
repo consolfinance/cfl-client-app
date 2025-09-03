@@ -1,10 +1,13 @@
 "use client";
 
 import { FC, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import classNames from "classnames";
 import { Button, Card, View, Text, TextField } from "reshaped";
 import { IconButton } from "@radix-ui/themes";
+import CFLLogo from "@/public/CFL-logo.png";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import type { AuthAction } from "@/types/auth";
 import { AuthFormData } from "@/types/auth";
@@ -166,16 +169,19 @@ const Auth: FC<IAuth> = ({ action }) => {
   };
 
   return (
-    <Card className={styles.authCard}>
-      <View className={styles.root}>
-        <Text
-          variant="featured-3"
-          weight="bold"
-          align="center"
-          className={styles.title}
-        >
-          {titleText[action]}
-        </Text>
+    <Card className={styles.authCard} elevated padding={0}>
+      <View className={styles.root} backgroundColor="elevation-base" padding={8}>
+        <View direction="row" justify="center" width="100%" align={"center"} gap={2}>
+          <Image src={CFLLogo} alt="Consol Finance" width={22} height={22} />
+          <Text
+            variant="featured-3"
+            weight="bold"
+            align="center"
+            className={styles.title}
+          >
+            {titleText[action]}
+          </Text>
+        </View>
         <form className={styles.form} onSubmit={handleSubmit} autoComplete="off">
           {action === "register" && (
             <>
@@ -317,14 +323,14 @@ const Auth: FC<IAuth> = ({ action }) => {
                 ? "Already have an account?"
                 : "Don't have an account?"
             }`}{" "}
-            <a
+            <Link
               className={styles.footerLink}
               href={`/auth/${action === "login" ? "register" : "login"}${
                 returnUrl ? `?returnUrl=${encodeURIComponent(returnUrl)}` : ""
               }`}
             >
               {action === "login" ? "Sign Up" : "Log In"}
-            </a>
+            </Link>
           </Text>
         </div>
       </View>
