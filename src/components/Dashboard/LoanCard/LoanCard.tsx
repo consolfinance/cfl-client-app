@@ -47,7 +47,7 @@ const LoanCard: FC<LoanCardProps> = ({ type, slug, name, description }) => {
 
   return (
     <div className={styles.root}>
-      <Card padding={0}>
+      <Card padding={0} elevated>
         <View backgroundColor="elevation-overlay" padding={4}>
           <div className={styles.content}>
             <div className={styles.header}>
