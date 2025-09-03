@@ -1,102 +1,69 @@
 "use client";
 
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 import Cookies from "js-cookie";
 import FullLoader from "@/components/Common/FullLoader/FullLoader";
 import { isPublicRoute } from "@/utils/publicRoutes";
 
+const cachedUserRef = { current: null }; // ⚡️ Store user between renders
+
 const AuthWrapper: FC<{ children: ReactNode }> = ({ children }) => {
   const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(true);
-  const [isRedirecting, setIsRedirecting] = useState(false); // Flag to prevent multiple redirects
-
-  const [hasFetched, setHasFetched] = useState(false);
-
-  const getUserData = useCallback(async () => {
-    try {
-      // Prevent multiple fetches
-      if (hasFetched) return;
-
-      const userData = !!Cookies.get("user");
-
-      // Even if we *have* user data in cookies, fetch it once
-      if (!hasFetched) {
-        setIsLoading(true);
-
-        const response = await fetch("/api/user/me");
-
-        if (!response.ok) {
-          if (!isRedirecting) {
-            setIsRedirecting(true);
-            logout();
-          }
-        }
-
-        setHasFetched(true);
-      } else if (userData) {
-        setIsLoading(false);
-      }
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [hasFetched, isRedirecting, pathname]);
+  const [isRedirecting, setIsRedirecting] = useState(false);
+  const hasFetchedRef = useRef(false);
 
   const logout = useCallback(async () => {
+    if (isRedirecting) return;
+    setIsRedirecting(true);
+    await fetch("/api/auth/logout");
+    window.location.href = "/auth/login?returnUrl=" + encodeURIComponent(pathname);
+  }, [isRedirecting]);
+
+  const fetchUserData = useCallback(async () => {
+    if (cachedUserRef.current || hasFetchedRef.current) {
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      // Prevent the loop by checking if already redirecting
-      if (isRedirecting) return;
-
-      setIsRedirecting(true); // Set flag before logout
-
-      await fetch("/api/auth/logout");
-      window.location.href = "/auth/login"; // Redirect to login after logout
-    } catch (error) {
-      console.error("Error logging out:", error);
+      const res = await fetch("/api/user/me");
+      if (!res.ok) throw new Error("Unauthorized");
+      const user = await res.json();
+      cachedUserRef.current = user;
+      hasFetchedRef.current = true;
+    } catch (err) {
+      logout();
     } finally {
       setIsLoading(false);
     }
-  }, [isRedirecting]);
+  }, [logout]);
 
   useEffect(() => {
-    // Check if the current route is public
     if (isPublicRoute(pathname)) {
       setIsLoading(false);
       return;
     }
 
-    // --- Token expiry check ---
     const tokenExp = Cookies.get("token_exp");
-
     if (!tokenExp) {
-      logout(); // If no token exists, log out immediately
+      logout();
       return;
     }
 
-    try {
-      const exp = Number(tokenExp); // Convert to number (expiry timestamp)
-      const now = Date.now() / 1000; // Current time in seconds
+    const exp = Number(tokenExp);
+    const now = Date.now() / 1000;
 
-      // Token is expired or expiring in the next 60 seconds
-      if (exp < now + 60) {
-        logout(); // Expired token, log out
-      } else {
-        getUserData(); // Fetch user data if token is valid
-      }
-    } catch (err) {
-      console.error("Error decoding token:", err);
+    if (exp < now + 60) {
+      logout();
+    } else {
+      fetchUserData();
     }
-  }, [getUserData, logout, pathname]);
+  }, [pathname, fetchUserData, logout]);
 
-  return (
-    <>
-      {!isLoading && children}
-      {isLoading && <FullLoader />}
-    </>
-  );
+  return isLoading ? <FullLoader /> : <>{children}</>;
 };
 
 export default AuthWrapper;

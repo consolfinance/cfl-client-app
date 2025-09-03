@@ -3,7 +3,6 @@
 import { FC } from "react";
 import { useRouter } from "next/navigation";
 import classNames from "classnames";
-// import { Badge, Button, Card, Text } from "@radix-ui/themes";
 import { Badge, Button, Card, Text, View } from "reshaped";
 
 import styles from "./LoanCard.module.scss";
@@ -16,7 +15,7 @@ interface LoanCardProps {
   description: string;
 }
 
-const LoanCard: FC<LoanCardProps> = ({ id, type, slug, name, description }) => {
+const LoanCard: FC<LoanCardProps> = ({ type, slug, name, description }) => {
   const router = useRouter();
 
   const handleApplyNow = async () => {
