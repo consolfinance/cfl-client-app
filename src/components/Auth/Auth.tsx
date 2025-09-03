@@ -32,6 +32,7 @@ const Auth: FC<IAuth> = ({ action }) => {
   const [errors, setErrors] = useState<Partial<AuthFormData>>({});
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const returnUrl = new URL(window.location.href).searchParams.get("returnUrl");
 
   const validateForm = (): boolean => {
     const newErrors: Partial<AuthFormData> = { ...errors };
@@ -156,7 +157,7 @@ const Auth: FC<IAuth> = ({ action }) => {
           throw new Error("Unknown action");
       }
 
-      router.push("/"); // redirect to ?redirect="optional-redirect-pathname"
+      router.push(returnUrl || "/"); // redirect to ?redirect="optional-redirect-pathname"
     } catch (error) {
       console.error(error);
     } finally {
@@ -318,7 +319,9 @@ const Auth: FC<IAuth> = ({ action }) => {
             }`}{" "}
             <a
               className={styles.footerLink}
-              href={`/auth/${action === "login" ? "register" : "login"}`}
+              href={`/auth/${action === "login" ? "register" : "login"}${
+                returnUrl ? `?returnUrl=${encodeURIComponent(returnUrl)}` : ""
+              }`}
             >
               {action === "login" ? "Sign Up" : "Log In"}
             </a>
