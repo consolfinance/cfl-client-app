@@ -96,51 +96,54 @@ const UserApplications: FC = () => {
 
       {!isLoading && applications.length > 0 && (
         <View className={styles.applicationsList} gap={4}>
-          {applications.map((application) => (
-            <Card
-              padding={0}
-              key={application.documentId}
-              href={`/applications/${application.documentId}`}
-            >
-              <View className={styles.applicationItem} padding={6}>
-                <View
-                  direction={"row"}
-                  align="center"
-                  gap={4}
-                  justify={"space-between"}
-                >
-                  <Text variant="body-3" weight="medium">
-                    {getLoanData(application.documentId).title}
-                  </Text>
-                  <View direction={"row"} align="center" gap={2}>
-                    {application.applicationStatus !== "draft" &&
-                      !!application.score && (
-                        <View direction={"row"} align="center" gap={2}>
-                          <Text variant="body-3" weight="medium">
-                            Score:
-                          </Text>
-                          <Text
-                            variant="body-3"
-                            weight="medium"
-                            color={getScoreColor(application)}
-                          >
-                            {application.score} ({application.grade})
-                          </Text>
-                        </View>
-                      )}
+          {applications //reverse order
+            ?.slice()
+            ?.reverse()
+            .map((application) => (
+              <Card
+                padding={0}
+                key={application.documentId}
+                href={`/applications/${application.documentId}`}
+              >
+                <View className={styles.applicationItem} padding={6}>
+                  <View
+                    direction={"row"}
+                    align="center"
+                    gap={4}
+                    justify={"space-between"}
+                  >
+                    <Text variant="body-3" weight="medium">
+                      {getLoanData(application.documentId).title}
+                    </Text>
+                    <View direction={"row"} align="center" gap={2}>
+                      {application.applicationStatus !== "draft" &&
+                        !!application.score && (
+                          <View direction={"row"} align="center" gap={2}>
+                            <Text variant="body-3" weight="medium">
+                              Score:
+                            </Text>
+                            <Text
+                              variant="body-3"
+                              weight="medium"
+                              color={getScoreColor(application)}
+                            >
+                              {application.score} ({application.grade})
+                            </Text>
+                          </View>
+                        )}
 
-                    <Badge
-                      color={getBadgeColor(application)}
-                      size="large"
-                      className={styles.badge}
-                    >
-                      {application.applicationStatus}
-                    </Badge>
+                      <Badge
+                        color={getBadgeColor(application)}
+                        size="large"
+                        className={styles.badge}
+                      >
+                        {application.applicationStatus}
+                      </Badge>
+                    </View>
                   </View>
                 </View>
-              </View>
-            </Card>
-          ))}
+              </Card>
+            ))}
         </View>
       )}
     </View>

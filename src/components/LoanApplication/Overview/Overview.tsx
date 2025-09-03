@@ -136,7 +136,7 @@ const Overview: FC<OverviewProps> = ({
       const isLastStep =
         activeStep === (loanTypeQuestions[loanSlug]?.length || 1) - 1;
 
-      const questions = loanTypeQuestions["set-up-loan"].flatMap(
+      const questions = loanTypeQuestions[loanSlug].flatMap(
         (step) => step.questions
       );
 
