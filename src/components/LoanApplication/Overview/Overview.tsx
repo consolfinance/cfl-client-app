@@ -233,7 +233,6 @@ const Overview: FC<OverviewProps> = ({
   };
 
   useEffect(() => {
-    console.log(`%c--> In UseEffect`, "color: blue;", { loanApplicationData });
     const newBadgeColor = getBadgeColor();
     setBadgeColor(newBadgeColor);
     const newScoreColor = getScoreColor();

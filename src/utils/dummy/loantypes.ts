@@ -11,7 +11,8 @@ export type SubQuestion = {
     | "radio"
     | "select"
     | "textarea"
-    | "checkbox";
+    | "checkbox"
+    | "fileUpload";
   enum?: { label: string; value: string }[];
   checkboxText?: string;
   weight: number;
@@ -532,6 +533,40 @@ export const loanTypeQuestions = {
             },
           ],
         },
+        {
+          key: "final_uploads",
+          label: "Final Uploads",
+          subQuestions: [
+            {
+              key: "bank_statements",
+              label: "Last 6–12 months bank statements / wallet exports",
+              required: false,
+              type: "fileUpload",
+              weight: 5,
+            },
+            {
+              key: "trade_documents",
+              label: "Trade documents (invoices/POs/settlements)",
+              required: false,
+              type: "fileUpload",
+              weight: 5,
+            },
+            {
+              key: "utility_bills",
+              label: "Utility bills (3–6 months)",
+              required: false,
+              type: "fileUpload",
+              weight: 5,
+            },
+            {
+              key: "collateral_documents",
+              label: "Any collateral documents (valuation, deed, logbook, etc.)",
+              required: false,
+              type: "fileUpload",
+              weight: 5,
+            },
+          ],
+        },
       ],
     },
   ],
@@ -1000,6 +1035,40 @@ export const loanTypeQuestions = {
                 "Any additional information you'd like to share with the credit officer",
               required: false,
               type: "textarea",
+              weight: 5,
+            },
+          ],
+        },
+        {
+          key: "final_uploads",
+          label: "Final Uploads",
+          subQuestions: [
+            {
+              key: "bank_statements",
+              label: "Last 6–12 months bank statements / wallet exports",
+              required: false,
+              type: "fileUpload",
+              weight: 5,
+            },
+            {
+              key: "trade_documents",
+              label: "Trade documents (invoices/POs/settlements)",
+              required: false,
+              type: "fileUpload",
+              weight: 5,
+            },
+            {
+              key: "utility_bills",
+              label: "Utility bills (3–6 months)",
+              required: false,
+              type: "fileUpload",
+              weight: 5,
+            },
+            {
+              key: "collateral_documents",
+              label: "Any collateral documents (valuation, deed, logbook, etc.)",
+              required: false,
+              type: "fileUpload",
               weight: 5,
             },
           ],
@@ -1476,6 +1545,40 @@ export const loanTypeQuestions = {
             },
           ],
         },
+        {
+          key: "final_uploads",
+          label: "Final Uploads",
+          subQuestions: [
+            {
+              key: "bank_statements",
+              label: "Last 6–12 months bank statements / wallet exports",
+              required: false,
+              type: "fileUpload",
+              weight: 5,
+            },
+            {
+              key: "trade_documents",
+              label: "Trade documents (invoices/POs/settlements)",
+              required: false,
+              type: "fileUpload",
+              weight: 5,
+            },
+            {
+              key: "utility_bills",
+              label: "Utility bills (3–6 months)",
+              required: false,
+              type: "fileUpload",
+              weight: 5,
+            },
+            {
+              key: "collateral_documents",
+              label: "Any collateral documents (valuation, deed, logbook, etc.)",
+              required: false,
+              type: "fileUpload",
+              weight: 5,
+            },
+          ],
+        },
       ],
     },
   ],
@@ -1948,6 +2051,40 @@ export const loanTypeQuestions = {
             },
           ],
         },
+        {
+          key: "final_uploads",
+          label: "Final Uploads",
+          subQuestions: [
+            {
+              key: "bank_statements",
+              label: "Last 6–12 months bank statements / wallet exports",
+              required: false,
+              type: "fileUpload",
+              weight: 5,
+            },
+            {
+              key: "trade_documents",
+              label: "Trade documents (invoices/POs/settlements)",
+              required: false,
+              type: "fileUpload",
+              weight: 5,
+            },
+            {
+              key: "utility_bills",
+              label: "Utility bills (3–6 months)",
+              required: false,
+              type: "fileUpload",
+              weight: 5,
+            },
+            {
+              key: "collateral_documents",
+              label: "Any collateral documents (valuation, deed, logbook, etc.)",
+              required: false,
+              type: "fileUpload",
+              weight: 5,
+            },
+          ],
+        },
       ],
     },
   ],
@@ -2416,6 +2553,40 @@ export const loanTypeQuestions = {
                 "Any additional information you'd like to share with the credit officer",
               required: false,
               type: "textarea",
+              weight: 5,
+            },
+          ],
+        },
+        {
+          key: "final_uploads",
+          label: "Final Uploads",
+          subQuestions: [
+            {
+              key: "bank_statements",
+              label: "Last 6–12 months bank statements / wallet exports",
+              required: false,
+              type: "fileUpload",
+              weight: 5,
+            },
+            {
+              key: "trade_documents",
+              label: "Trade documents (invoices/POs/settlements)",
+              required: false,
+              type: "fileUpload",
+              weight: 5,
+            },
+            {
+              key: "utility_bills",
+              label: "Utility bills (3–6 months)",
+              required: false,
+              type: "fileUpload",
+              weight: 5,
+            },
+            {
+              key: "collateral_documents",
+              label: "Any collateral documents (valuation, deed, logbook, etc.)",
+              required: false,
+              type: "fileUpload",
               weight: 5,
             },
           ],
