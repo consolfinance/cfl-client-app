@@ -30,12 +30,6 @@ const Question: FC<QuestionProps> = ({
   loanApplicationData,
   setLoanApplicationData,
 }) => {
-  console.log(`%c--> im justy happy to be here`, "color:#bada55", {
-    key,
-    label,
-    subQuestions,
-  });
-
   const getInput = (sq: SubQuestion) => {
     const value = loanApplicationData?.answers?.[questionKey]?.[sq?.key] ?? "";
     const numberValue = Number(
