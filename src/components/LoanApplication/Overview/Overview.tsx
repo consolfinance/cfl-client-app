@@ -40,6 +40,10 @@ const Overview: FC<OverviewProps> = ({
 }) => {
   const toast = useToast();
 
+  const [paginationLoaders, setPaginationLoaders] = useState({
+    next: false,
+    back: false,
+  });
   const { loanType, loanSlug } = loanApplicationData;
   const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
   const [calculatorValues, setCalculatorValues] = useState<CalculatorValues>({
@@ -152,6 +156,7 @@ const Overview: FC<OverviewProps> = ({
 
   const handleNext = async () => {
     try {
+      setPaginationLoaders({ next: true, back: false });
       // First check if all required fields are filled
 
       if (!isStepComplete(activeStep, loanApplicationData.answers)) {
@@ -245,11 +250,15 @@ const Overview: FC<OverviewProps> = ({
       }
     } catch (error) {
       console.error("Error saving step:", error);
+    } finally {
+      setPaginationLoaders({ next: false, back: false });
     }
   };
 
   const handleBack = async () => {
     try {
+      setPaginationLoaders({ next: false, back: true });
+      const uploadedFileIds = await uploadFiles();
       const payload = {
         ...loanApplicationData,
         currentStep: activeStep - 1,
@@ -257,6 +266,13 @@ const Overview: FC<OverviewProps> = ({
         isComplete: false,
         score: null,
         grade: null,
+        supportingDocuments: [
+          ...(loanApplicationData.supportingDocuments || []),
+          ...uploadedFileIds.map((up) => ({
+            file: up.id,
+            fileKey: up.fileKey,
+          })),
+        ],
         createdAt: undefined,
         updatedAt: undefined,
         locale: undefined,
@@ -278,6 +294,8 @@ const Overview: FC<OverviewProps> = ({
         throw new Error("Failed to save application step");
       }
 
+      const resData = await response.json();
+
       setActiveStep((prev) => Math.max(prev - 1, 0));
       setLoanApplicationData((prev) => ({
         ...prev,
@@ -286,9 +304,19 @@ const Overview: FC<OverviewProps> = ({
         isComplete: false,
         score: 0,
         grade: "",
+        supportingDocuments: [
+          ...(resData.supportingDocuments?.map(
+            (sd: { file: { id: number }; fileKey: string }) => ({
+              file: sd.file.id,
+              fileKey: sd.fileKey,
+            })
+          ) || []),
+        ],
       }));
     } catch (error) {
       console.error("Error saving step:", error);
+    } finally {
+      setPaginationLoaders({ next: false, back: false });
     }
   };
 
@@ -437,6 +465,7 @@ const Overview: FC<OverviewProps> = ({
                 className={styles.button}
                 onClick={handleBack}
                 color="primary"
+                loading={paginationLoaders.back || paginationLoaders.next}
               >
                 Previous
               </Button>
@@ -451,6 +480,7 @@ const Overview: FC<OverviewProps> = ({
               onClick={handleNext}
               className={styles.button}
               color="primary"
+              loading={paginationLoaders.next || paginationLoaders.back}
             >
               {activeStep === (loanTypeQuestions[loanSlug]?.length || 1) - 1
                 ? "Submit"
