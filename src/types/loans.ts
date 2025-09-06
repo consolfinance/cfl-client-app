@@ -16,4 +16,5 @@ export type LoanApplicationData = {
   score: number;
   answers: Record<string, Record<string, unknown>>;
   applicationStatus?: string;
+  supportingDocuments?: { id: number; fileKey: string; url: string; name: string }[];
 };

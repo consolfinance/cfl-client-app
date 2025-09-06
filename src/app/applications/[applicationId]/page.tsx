@@ -13,6 +13,9 @@ const LoanApplicationPage: FC = () => {
 
   const [loanApplicationData, setLoanApplicationData] =
     useState<LoanApplicationData>(undefined as unknown as LoanApplicationData);
+  const [supportDocumentsToUpload, setSupportDocumentsToUpload] = useState<
+    Record<string, File | null>
+  >({});
 
   const getApplicationDetails = useCallback(async () => {
     try {
@@ -25,7 +28,16 @@ const LoanApplicationPage: FC = () => {
         throw new Error("Failed to fetch application details");
       }
       const data = await response.json();
-      setLoanApplicationData(data);
+      setLoanApplicationData({
+        ...data,
+        supportingDocuments:
+          data.supportingDocuments?.map(
+            (sd: { file: { id: number }; fileKey: string }) => ({
+              file: sd.file.id,
+              fileKey: sd.fileKey,
+            })
+          ) || [],
+      });
     } catch (error) {
       console.error("Error fetching application details:", error);
     }
@@ -42,6 +54,8 @@ const LoanApplicationPage: FC = () => {
           <Overview
             loanApplicationData={loanApplicationData}
             setLoanApplicationData={setLoanApplicationData}
+            supportDocumentsToUpload={supportDocumentsToUpload}
+            setSupportDocumentsToUpload={setSupportDocumentsToUpload}
           />
         </div>
       )}

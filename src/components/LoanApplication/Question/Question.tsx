@@ -2,35 +2,71 @@
 
 import { Dispatch, FC, SetStateAction } from "react";
 import {
+  Button,
   Card,
-  Text,
-  View,
-  // Switch,
-  TextField,
+  Checkbox,
+  FileUpload,
   Radio,
   RadioGroup,
+  Text,
   TextArea,
-  Checkbox,
-  Button,
+  TextField,
+  useToast,
+  View,
 } from "reshaped";
 import type { Question, SubQuestion } from "@/utils/dummy/loantypes";
 import styles from "./Question.module.scss";
 import { LoanApplicationData } from "@/types/loans";
-import { UploadIcon } from "lucide-react";
+import { CheckCircle2, UploadIcon, XCircle } from "lucide-react";
 
 type QuestionProps = Question & {
   questionKey: string;
   loanApplicationData: LoanApplicationData;
   setLoanApplicationData: Dispatch<SetStateAction<LoanApplicationData>>;
+  supportDocumentsToUpload: Record<string, File | null>;
+  setSupportDocumentsToUpload: Dispatch<SetStateAction<Record<string, File | null>>>;
 };
 
-const Question: FC<QuestionProps> = ({
+const QuestionComponent: FC<QuestionProps> = ({
   label,
   subQuestions,
   questionKey,
   loanApplicationData,
   setLoanApplicationData,
+  supportDocumentsToUpload,
+  setSupportDocumentsToUpload,
 }) => {
+  const toast = useToast();
+
+  const handleFileInput = async ({
+    value,
+    sq,
+  }: {
+    value: File[];
+    event?: React.ChangeEvent<HTMLInputElement> | React.DragEvent<HTMLDivElement>;
+    sq: SubQuestion;
+  }) => {
+    try {
+      //if file is not pdf toast error and return
+      if (value?.[0]?.type !== "application/pdf") {
+        toast.show({
+          title: "Error",
+          text: "Only PDF files are allowed.",
+          color: "critical",
+          icon: <XCircle />,
+          size: "large",
+          position: "top-end",
+        });
+        return;
+      }
+
+      const file = value?.[0] ?? null;
+      setSupportDocumentsToUpload((prev) => ({ ...prev, [sq.key]: file }));
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
   const getInput = (sq: SubQuestion) => {
     const value = loanApplicationData?.answers?.[questionKey]?.[sq?.key] ?? "";
     const numberValue = Number(
@@ -110,18 +146,21 @@ const Question: FC<QuestionProps> = ({
           </View>
         );
 
-      // Uncomment and implement as needed:
-      // case "boolean":
-      //   return (
-      //     <Switch
-      //       checked={Boolean(value)}
-      //       onChange={(checked) => handleChange(checked)}
-      //     />
-      //   );
-
       default:
         return null;
     }
+  };
+
+  const getKeyName = (key: string) => {
+    // change from snake case to Title Case and add .pdf on the end
+    return (
+      key
+        .replace(/_/g, " ")
+        .replace(
+          /\w\S*/g,
+          (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+        ) + ".pdf"
+    );
   };
 
   return (
@@ -153,64 +192,108 @@ const Question: FC<QuestionProps> = ({
 
             return (
               <Card key={sq.key}>
-                <View direction="row" align="center" gap={2} justify="space-between">
-                  <View direction="row" align="center" gap={2}>
-                    <Checkbox name={sq.key} />
-                    <Text>{sq.label}</Text>
-                  </View>
-
-                  <Button
-                    variant="outline"
-                    color="primary"
-                    icon={<UploadIcon width={20} />}
+                <View gap={4}>
+                  <View
+                    direction="row"
+                    align="center"
+                    gap={2}
+                    justify="space-between"
                   >
-                    Upload
-                  </Button>
+                    <View direction="row" align="center" gap={2}>
+                      <Checkbox
+                        name={sq.key}
+                        checked={
+                          Boolean(supportDocumentsToUpload?.[sq.key]) ||
+                          loanApplicationData?.supportingDocuments?.some(
+                            (doc) => doc.fileKey === sq.key
+                          )
+                        }
+                      />
+                      <Text>{sq.label}</Text>
+                    </View>
+                    <FileUpload
+                      name={sq.key}
+                      inline
+                      variant="headless"
+                      inputAttributes={{ accept: ".pdf" }}
+                      onChange={({ value }) =>
+                        handleFileInput({
+                          value,
+                          sq,
+                        })
+                      }
+                    >
+                      {(props) => (
+                        <Button
+                          highlighted={props.highlighted}
+                          variant="outline"
+                          color="primary"
+                          icon={<UploadIcon width={20} />}
+                        >
+                          Upload
+                        </Button>
+                      )}
+                    </FileUpload>
+                  </View>
+                  {supportDocumentsToUpload?.[sq.key] && (
+                    <Card padding={0}>
+                      <View
+                        direction="row"
+                        align="center"
+                        justify="space-between"
+                        padding={2}
+                        gap={2}
+                      >
+                        <Text variant="caption-1" color="neutral-faded">
+                          {supportDocumentsToUpload?.[sq.key]?.name ||
+                            getKeyName(sq.key)}
+                        </Text>
+                        <Button
+                          variant="ghost"
+                          color="critical"
+                          onClick={() =>
+                            setSupportDocumentsToUpload((prev) => ({
+                              ...prev,
+                              [sq.key]: null,
+                            }))
+                          }
+                          icon={<XCircle />}
+                          type="button"
+                        />
+                      </View>
+                    </Card>
+                  )}
+                  {!supportDocumentsToUpload?.[sq.key] &&
+                    loanApplicationData?.supportingDocuments?.some(
+                      (doc) => doc.fileKey === sq.key
+                    ) && (
+                      <Card padding={0}>
+                        <View
+                          direction="row"
+                          align="center"
+                          justify="space-between"
+                          padding={2}
+                          gap={2}
+                        >
+                          <Text variant="caption-1" color="neutral-faded">
+                            {getKeyName(sq.key)}
+                          </Text>
+                          <Button
+                            variant="ghost"
+                            color="positive"
+                            icon={<CheckCircle2 />}
+                          />
+                        </View>
+                      </Card>
+                    )}
                 </View>
               </Card>
             );
           })}
         </View>
-
-        {/* {question.type === "boolean" && (
-          <Switch
-            name={question.key}
-            checked={Boolean(value)}
-            onChange={(e) => onChange(e.checked)}
-          />
-        )}
-
-        {question.type === "number" && (
-          <TextField
-            name={question.key}
-            value={
-              typeof value === "string"
-                ? value
-                : value !== undefined && value !== null
-                ? String(value)
-                : ""
-            }
-            onChange={(e) => onChange(Number(e.value))}
-            inputAttributes={{ type: "number" }}
-          />
-        )} */}
-        {/* 
-      {question.type === "select" && question.options && (
-        <select
-          className="w-full border rounded-md p-2"
-          value={value ?? ""}
-          onChange={(e) => onChange(e.target.value)}
-        >
-          <option value="">Select an option</option>
-          {question.options.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select> */}
       </View>
     </Card>
   );
 };
 
-export default Question;
+export default QuestionComponent;
