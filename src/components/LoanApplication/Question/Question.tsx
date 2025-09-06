@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import {
   Button,
   Card,
@@ -11,6 +11,7 @@ import {
   Text,
   TextArea,
   TextField,
+  useToast,
   View,
 } from "reshaped";
 import type { Question, SubQuestion } from "@/utils/dummy/loantypes";
@@ -35,6 +36,8 @@ const QuestionComponent: FC<QuestionProps> = ({
   supportDocumentsToUpload,
   setSupportDocumentsToUpload,
 }) => {
+  const toast = useToast();
+
   const handleFileInput = async ({
     value,
     sq,
@@ -44,6 +47,19 @@ const QuestionComponent: FC<QuestionProps> = ({
     sq: SubQuestion;
   }) => {
     try {
+      //if file is not pdf toast error and return
+      if (value?.[0]?.type !== "application/pdf") {
+        toast.show({
+          title: "Error",
+          text: "Only PDF files are allowed.",
+          color: "critical",
+          icon: <XCircle />,
+          size: "large",
+          position: "top-end",
+        });
+        return;
+      }
+
       const file = value?.[0] ?? null;
       setSupportDocumentsToUpload((prev) => ({ ...prev, [sq.key]: file }));
     } catch (error) {
@@ -199,6 +215,7 @@ const QuestionComponent: FC<QuestionProps> = ({
                       name={sq.key}
                       inline
                       variant="headless"
+                      inputAttributes={{ accept: ".pdf" }}
                       onChange={({ value }) =>
                         handleFileInput({
                           value,
@@ -246,28 +263,29 @@ const QuestionComponent: FC<QuestionProps> = ({
                       </View>
                     </Card>
                   )}
-                  {loanApplicationData?.supportingDocuments?.some(
-                    (doc) => doc.fileKey === sq.key
-                  ) && (
-                    <Card padding={0}>
-                      <View
-                        direction="row"
-                        align="center"
-                        justify="space-between"
-                        padding={2}
-                        gap={2}
-                      >
-                        <Text variant="caption-1" color="neutral-faded">
-                          {getKeyName(sq.key)}
-                        </Text>
-                        <Button
-                          variant="ghost"
-                          color="positive"
-                          icon={<CheckCircle2 />}
-                        />
-                      </View>
-                    </Card>
-                  )}
+                  {!supportDocumentsToUpload?.[sq.key] &&
+                    loanApplicationData?.supportingDocuments?.some(
+                      (doc) => doc.fileKey === sq.key
+                    ) && (
+                      <Card padding={0}>
+                        <View
+                          direction="row"
+                          align="center"
+                          justify="space-between"
+                          padding={2}
+                          gap={2}
+                        >
+                          <Text variant="caption-1" color="neutral-faded">
+                            {getKeyName(sq.key)}
+                          </Text>
+                          <Button
+                            variant="ghost"
+                            color="positive"
+                            icon={<CheckCircle2 />}
+                          />
+                        </View>
+                      </Card>
+                    )}
                 </View>
               </Card>
             );

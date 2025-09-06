@@ -117,6 +117,10 @@ const Overview: FC<OverviewProps> = ({
 
   const uploadFiles = async (): Promise<{ id: number; fileKey: string }[]> => {
     try {
+      if (Object.values(supportDocumentsToUpload).every((file) => file === null)) {
+        return [];
+      }
+
       const formData = new FormData();
 
       for (const [fileKey, file] of Object.entries(supportDocumentsToUpload)) {
@@ -216,13 +220,24 @@ const Overview: FC<OverviewProps> = ({
         throw new Error("Failed to save application step");
       }
 
+      const resData = await response.json();
+
       // Proceed to the next step
       setActiveStep((prev) =>
         Math.min(prev + 1, loanTypeQuestions[loanSlug]?.length - 1)
       );
+
       setLoanApplicationData((prev) => ({
         ...prev,
         ...JSON.parse(payload),
+        supportingDocuments: [
+          ...(resData.supportingDocuments?.map(
+            (sd: { file: { id: number }; fileKey: string }) => ({
+              file: sd.file.id,
+              fileKey: sd.fileKey,
+            })
+          ) || []),
+        ],
       }));
 
       if (isLastStep) {
