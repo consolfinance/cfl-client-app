@@ -369,8 +369,7 @@ const Overview: FC<OverviewProps> = ({
   return (
     <>
       <SuccessModal
-        // isOpen={showSuccessModal}
-        isOpen={false}
+        isOpen={showSuccessModal}
         onClose={() => setShowSuccessModal(false)}
       />
       <Card padding={0} className={styles.card}>
