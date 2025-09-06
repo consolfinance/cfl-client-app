@@ -19,12 +19,7 @@ const SuccessModal: FC<{ isOpen: boolean; onClose: () => void }> = ({
   };
 
   return (
-    <Modal
-      active={isOpen}
-      onClose={handleClose}
-      disableCloseOnOutsideClick
-      size="600px"
-    >
+    <Modal active={isOpen} onClose={handleClose} size="600px">
       <View gap={4} padding={4} align="center">
         <View
           className={styles.modalLogo}
