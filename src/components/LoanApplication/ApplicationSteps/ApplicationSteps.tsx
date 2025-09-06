@@ -14,6 +14,8 @@ interface ApplicationStepsProps {
   slug: LoanTypeSlug;
   loanApplicationData: LoanApplicationData;
   setLoanApplicationData: Dispatch<SetStateAction<LoanApplicationData>>;
+  supportDocumentsToUpload: Record<string, File | null>;
+  setSupportDocumentsToUpload: Dispatch<SetStateAction<Record<string, File | null>>>;
 }
 
 const ApplicationSteps: FC<ApplicationStepsProps> = ({
@@ -21,6 +23,8 @@ const ApplicationSteps: FC<ApplicationStepsProps> = ({
   activeStep,
   slug,
   setLoanApplicationData,
+  supportDocumentsToUpload,
+  setSupportDocumentsToUpload,
 }) => {
   return (
     <div className={styles.questionsWrapper}>
@@ -33,6 +37,8 @@ const ApplicationSteps: FC<ApplicationStepsProps> = ({
             setLoanApplicationData={setLoanApplicationData}
             label={q.label}
             subQuestions={q.subQuestions as SubQuestion[]}
+            supportDocumentsToUpload={supportDocumentsToUpload}
+            setSupportDocumentsToUpload={setSupportDocumentsToUpload}
           />
         );
       })}

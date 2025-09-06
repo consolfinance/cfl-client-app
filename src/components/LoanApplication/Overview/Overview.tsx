@@ -28,11 +28,15 @@ interface Step {
 interface OverviewProps {
   loanApplicationData: LoanApplicationData;
   setLoanApplicationData: Dispatch<SetStateAction<LoanApplicationData>>;
+  supportDocumentsToUpload: Record<string, File | null>;
+  setSupportDocumentsToUpload: Dispatch<SetStateAction<Record<string, File | null>>>;
 }
 
 const Overview: FC<OverviewProps> = ({
   loanApplicationData,
   setLoanApplicationData,
+  supportDocumentsToUpload,
+  setSupportDocumentsToUpload,
 }) => {
   const toast = useToast();
 
@@ -110,6 +114,42 @@ const Overview: FC<OverviewProps> = ({
       })
     );
   };
+
+  const uploadFiles = async (): Promise<{ id: number; fileKey: string }[]> => {
+    try {
+      if (Object.values(supportDocumentsToUpload).every((file) => file === null)) {
+        return [];
+      }
+
+      const formData = new FormData();
+
+      for (const [fileKey, file] of Object.entries(supportDocumentsToUpload)) {
+        if (file) {
+          formData.append("files", file);
+          formData.append("fileKeys", fileKey);
+        }
+      }
+
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to upload files");
+      }
+
+      const data = await response.json();
+
+      setSupportDocumentsToUpload({});
+
+      return data as { id: number; fileKey: string; url: string; name: string }[];
+    } catch (error) {
+      console.error("Error uploading files:", error);
+      return [];
+    }
+  };
+
   const handleNext = async () => {
     try {
       // First check if all required fields are filled
@@ -127,6 +167,8 @@ const Overview: FC<OverviewProps> = ({
         console.error("Please fill all required fields");
         return;
       }
+
+      const uploadedFileIds = await uploadFiles();
 
       const nextStep = Math.min(
         activeStep + 1,
@@ -150,6 +192,13 @@ const Overview: FC<OverviewProps> = ({
         isComplete: isLastStep,
         applicationStatus: isLastStep ? "submitted" : "draft",
         ...scoreData,
+        supportingDocuments: [
+          ...(loanApplicationData.supportingDocuments || []),
+          ...uploadedFileIds.map((up) => ({
+            file: up.id,
+            fileKey: up.fileKey,
+          })),
+        ],
         createdAt: undefined,
         updatedAt: undefined,
         locale: undefined,
@@ -171,13 +220,24 @@ const Overview: FC<OverviewProps> = ({
         throw new Error("Failed to save application step");
       }
 
+      const resData = await response.json();
+
       // Proceed to the next step
       setActiveStep((prev) =>
         Math.min(prev + 1, loanTypeQuestions[loanSlug]?.length - 1)
       );
+
       setLoanApplicationData((prev) => ({
         ...prev,
         ...JSON.parse(payload),
+        supportingDocuments: [
+          ...(resData.supportingDocuments?.map(
+            (sd: { file: { id: number }; fileKey: string }) => ({
+              file: sd.file.id,
+              fileKey: sd.fileKey,
+            })
+          ) || []),
+        ],
       }));
 
       if (isLastStep) {
@@ -309,7 +369,8 @@ const Overview: FC<OverviewProps> = ({
   return (
     <>
       <SuccessModal
-        isOpen={showSuccessModal}
+        // isOpen={showSuccessModal}
+        isOpen={false}
         onClose={() => setShowSuccessModal(false)}
       />
       <Card padding={0} className={styles.card}>
@@ -364,6 +425,8 @@ const Overview: FC<OverviewProps> = ({
               slug={loanSlug}
               loanApplicationData={loanApplicationData}
               setLoanApplicationData={setLoanApplicationData}
+              supportDocumentsToUpload={supportDocumentsToUpload}
+              setSupportDocumentsToUpload={setSupportDocumentsToUpload}
             />
           </div>
 
