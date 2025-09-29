@@ -177,7 +177,9 @@ const QuestionComponent: FC<QuestionProps> = ({
                 <View gap={1} key={sq.key}>
                   <View direction="row">
                     <Text variant="body-3">{sq.label}</Text>
-                    {sq.required && <Text color="critical">*</Text>}
+                    {sq.required && sq.type !== "checkbox" && (
+                      <Text color="critical">*</Text>
+                    )}
                   </View>
                   {sq.subtitle && (
                     <Text variant="caption-1" color="neutral-faded">
