@@ -1,0 +1,25 @@
+@use "@/styles/abstracts/variables" as *;
+@use "@/styles/abstracts/mixins" as *;
+@use "@/styles/abstracts/placeholders" as *;
+
+.root {
+  padding: 10px;
+  height: 100%;
+
+  .logoContainer {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .card {
+    height: 100%;
+  }
+
+  .container {
+    height: 100%;
+    flex: 1;
+  }
+}

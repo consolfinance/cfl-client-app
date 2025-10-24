@@ -1,0 +1,22 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 10px;
+}
+
+.formContainer {
+  display: grid;
+  gap: 15px;
+  grid-template-columns: 1fr 1fr;
+
+  .formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+
+.requiredAsterisk {
+  color: red;
+}
