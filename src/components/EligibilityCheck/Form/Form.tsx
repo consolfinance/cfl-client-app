@@ -96,7 +96,6 @@ const Form: FC<IFormProps> = ({
                 }
                 onChange={(args) => {
                   setShowDatePicker(false);
-                  console.log("Selected date:", args);
                   setFormData((prev: EligibilityFormData) => ({
                     ...prev,
                     [question.key]:
@@ -119,7 +118,6 @@ const Form: FC<IFormProps> = ({
                 })) || []
               }
               onChange={(option) => {
-                console.log("Selected value:", { option, formData });
                 setFormData((prev: EligibilityFormData) => ({
                   ...prev,
                   [question.key]: option.value as unknown as FormAnswer,
