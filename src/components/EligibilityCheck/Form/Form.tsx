@@ -1,8 +1,7 @@
 "use client";
 
 import { Dispatch, FC, SetStateAction, useState } from "react";
-import styles from "./Form.module.scss";
-import { Calendar, Select, TextField, View } from "reshaped";
+import { Button, Calendar, Select, TextField, View } from "reshaped";
 import dayjs from "dayjs";
 import {
   EligibilityFormData,
@@ -10,6 +9,8 @@ import {
   EligibilityStep,
   FormAnswer,
 } from "@/types/eligibility";
+import { eligibilityQuestions } from "@/utils/dummy/eligibilityCheckData";
+import styles from "./Form.module.scss";
 
 interface IFormProps {
   currentStep: number;
@@ -150,11 +151,31 @@ const Form: FC<IFormProps> = ({
         ))}
       </div>
 
-      <div className={styles.buttonGroup}>
-        <button onClick={onBack} disabled={currentStep === 0}>
+      <div className={styles.buttonsContainer}>
+        <Button
+          className={styles.button}
+          variant="outline"
+          color="primary"
+          onClick={onBack}
+          disabled={currentStep === 0}
+        >
           Back
-        </button>
-        <button onClick={onNext}>Next</button>
+        </Button>
+        <Button
+          className={styles.button}
+          variant="outline"
+          color="primary"
+          onClick={onNext}
+          disabled={currentQuestion.questions.some((question) => {
+            if (!question.required) return false;
+            const answer = formData?.[question.key];
+            return !answer;
+          })}
+        >
+          {currentStep === eligibilityQuestions.length - 1
+            ? "Check Eligibility"
+            : "Next"}
+        </Button>
       </div>
     </div>
   );

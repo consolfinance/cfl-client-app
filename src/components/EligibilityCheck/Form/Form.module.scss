@@ -20,3 +20,16 @@
 .requiredAsterisk {
   color: red;
 }
+
+.buttonsContainer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+
+  .button {
+    max-width: 200px;
+    flex: 1;
+  }
+}
