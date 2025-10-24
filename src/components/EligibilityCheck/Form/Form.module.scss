@@ -1,3 +1,7 @@
+@use "@/styles/abstracts/variables" as *;
+@use "@/styles/abstracts/mixins" as *;
+@use "@/styles/abstracts/placeholders" as *;
+
 .form {
   display: flex;
   flex-direction: column;
@@ -9,6 +13,10 @@
   display: grid;
   gap: 15px;
   grid-template-columns: 1fr 1fr;
+
+  @include max($tablet-m) {
+    grid-template-columns: 1fr;
+  }
 
   .formGroup {
     display: flex;
