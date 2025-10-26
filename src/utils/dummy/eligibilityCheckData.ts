@@ -71,7 +71,7 @@ export const eligibilityQuestions: EligibilityStep[] = [
     questions: [
       {
         key: "job_type",
-        label: "What  best describes you?",
+        label: "What best describes you?",
         type: "select",
         placeholder: "Select an option",
         options: [
