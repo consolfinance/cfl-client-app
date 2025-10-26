@@ -39,7 +39,6 @@ const Results: FC<IResultsProps> = ({ formData, setShowResults }) => {
 
     if (allEligibleLoans.length > 0) {
       setEligibleLoans(allEligibleLoans);
-      console.log({ allEligibleLoans });
       setDescription(`You are eligible for the following loans:`);
       setIsEligible(true);
     } else {
