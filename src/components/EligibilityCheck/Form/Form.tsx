@@ -3,6 +3,7 @@
 import { Dispatch, FC, SetStateAction, useState } from "react";
 import { Button, Calendar, Select, TextField, View } from "reshaped";
 import dayjs from "dayjs";
+import Results from "../Results/Results";
 import {
   EligibilityFormData,
   eligibilityQuestion,
@@ -30,6 +31,7 @@ const Form: FC<IFormProps> = ({
   onBack,
 }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showResults, setShowResults] = useState(false);
   const renderInput = (question: eligibilityQuestion) => {
     switch (question.type) {
       case "text":
@@ -135,46 +137,57 @@ const Form: FC<IFormProps> = ({
 
   return (
     <div className={styles.form}>
-      <div className={styles.formContainer}>
-        {currentQuestion.questions.map((question) => (
-          <div key={question.key} className={styles.formGroup}>
-            <div>
-              <label>{question.label}</label>{" "}
-              {question.required && (
-                <span className={styles.requiredAsterisk}>*</span>
-              )}
-            </div>
-            {renderInput(question)}
+      {!showResults && (
+        <>
+          <div className={styles.formContainer}>
+            {currentQuestion.questions.map((question) => (
+              <div key={question.key} className={styles.formGroup}>
+                <div>
+                  <label>{question.label}</label>{" "}
+                  {question.required && (
+                    <span className={styles.requiredAsterisk}>*</span>
+                  )}
+                </div>
+                {renderInput(question)}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
 
-      <div className={styles.buttonsContainer}>
-        <Button
-          className={styles.button}
-          variant="outline"
-          color="primary"
-          onClick={onBack}
-          disabled={currentStep === 0}
-        >
-          Back
-        </Button>
-        <Button
-          className={styles.button}
-          variant="outline"
-          color="primary"
-          onClick={onNext}
-          disabled={currentQuestion.questions.some((question) => {
-            if (!question.required) return false;
-            const answer = formData?.[question.key];
-            return !answer;
-          })}
-        >
-          {currentStep === eligibilityQuestions.length - 1
-            ? "Check Eligibility"
-            : "Next"}
-        </Button>
-      </div>
+          <div className={styles.buttonsContainer}>
+            <Button
+              className={styles.button}
+              variant="outline"
+              color="primary"
+              onClick={onBack}
+              disabled={currentStep === 0}
+            >
+              Back
+            </Button>
+            <Button
+              className={styles.button}
+              variant="outline"
+              color="primary"
+              onClick={() => {
+                onNext();
+                if (currentStep === eligibilityQuestions.length - 1)
+                  setShowResults(true);
+              }}
+              disabled={currentQuestion.questions.some((question) => {
+                if (!question.required) return false;
+                const answer = formData?.[question.key];
+                return !answer;
+              })}
+            >
+              {currentStep === eligibilityQuestions.length - 1
+                ? "Check Eligibility"
+                : "Next"}
+            </Button>
+          </div>
+        </>
+      )}
+      {showResults && (
+        <Results formData={formData} setShowResults={setShowResults} />
+      )}
     </div>
   );
 };

@@ -78,7 +78,7 @@ export const eligibilityQuestions: EligibilityStep[] = [
           { label: "I own a small, medium business", value: "business_owner" },
           {
             label: "I work for the government or public sector",
-            value: "government_employee",
+            value: "civil_servant",
           },
           { label: "I work for a private company", value: "private_employee" },
           { label: "I am self-employed", value: "self_employed" },
@@ -140,3 +140,34 @@ export const eligibilityQuestions: EligibilityStep[] = [
     ],
   },
 ];
+
+export const eligibilityMatrix = {
+  "credit-builder-loan": {
+    url: "/loan-application/credit-builder-loan",
+    acceptedAnswers: [
+      {
+        job_type: "civil_servant",
+
+        monthly_income: ["100k_300k", "300k_500k", "500k_1M", "1M_2M", "over_2M"],
+      },
+      {
+        job_type: "private_employee",
+        monthly_income: ["500k_1M", "1M_2M", "over_2M"],
+      },
+    ],
+  },
+  "growth-loan": {
+    url: "/loan-application/growth-loan",
+    acceptedAnswers: [
+      {
+        job_type: "civil_servant",
+
+        monthly_income: ["1M_2M", "over_2M"],
+      },
+      {
+        job_type: "private_employee",
+        monthly_income: ["over_2M"],
+      },
+    ],
+  },
+};
