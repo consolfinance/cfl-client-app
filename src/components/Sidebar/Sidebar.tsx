@@ -25,7 +25,7 @@ const Sidebar: FC = () => {
     }
   }, []);
 
-  if (pathname.startsWith("/auth")) {
+  if (pathname.startsWith("/auth") || pathname === "/eligibility-check") {
     return null;
   }
 

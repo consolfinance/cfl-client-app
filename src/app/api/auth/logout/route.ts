@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
     });
 
     response.cookies.set("token_exp", "", {
-      httpOnly: true,
+      httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       path: "/",
       expires: new Date(0),

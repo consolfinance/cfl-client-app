@@ -1,0 +1,195 @@
+"use client";
+
+import { Dispatch, FC, SetStateAction, useState } from "react";
+import { Button, Calendar, Select, TextField, View } from "reshaped";
+import dayjs from "dayjs";
+import Results from "../Results/Results";
+import {
+  EligibilityFormData,
+  eligibilityQuestion,
+  EligibilityStep,
+  FormAnswer,
+} from "@/types/eligibility";
+import { eligibilityQuestions } from "@/utils/dummy/eligibilityCheckData";
+import styles from "./Form.module.scss";
+
+interface IFormProps {
+  currentStep: number;
+  currentQuestion: EligibilityStep;
+  formData: EligibilityFormData;
+  setFormData: Dispatch<SetStateAction<EligibilityFormData>>;
+  onNext: () => void;
+  onBack: () => void;
+}
+
+const Form: FC<IFormProps> = ({
+  currentStep,
+  currentQuestion,
+  formData,
+  setFormData,
+  onNext,
+  onBack,
+}) => {
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const renderInput = (question: eligibilityQuestion) => {
+    switch (question.type) {
+      case "text":
+        return (
+          <TextField
+            name={question.key}
+            value={
+              formData?.[question?.key] != null
+                ? String(formData?.[question?.key])
+                : ""
+            }
+            onChange={(args) => {
+              const { value } = args;
+              setFormData((prev: EligibilityFormData) => ({
+                ...prev,
+                [question.key]: value as unknown as FormAnswer,
+              }));
+            }}
+          />
+        );
+      case "email":
+        return (
+          <TextField
+            name={question.key}
+            value={
+              formData?.[question?.key] != null
+                ? String(formData?.[question?.key])
+                : ""
+            }
+            inputAttributes={{ type: "email" }}
+            onChange={(args) => {
+              const { value } = args;
+              setFormData((prev: EligibilityFormData) => ({
+                ...prev,
+                [question.key]: value as unknown as FormAnswer,
+              }));
+            }}
+          />
+        );
+      case "date":
+        return (
+          <>
+            <TextField
+              name={question.key}
+              value={
+                question.key in formData
+                  ? dayjs(String(formData?.[question?.key])).format("YYYY-MM-DD")
+                  : ""
+              }
+              placeholder="YYYY-MM-DD"
+              onFocus={() => setShowDatePicker(true)}
+            />
+            {showDatePicker && (
+              <Calendar
+                value={
+                  question.key in formData
+                    ? new Date(String(formData?.[question?.key]))
+                    : new Date()
+                }
+                selectedDates={
+                  question.key in formData
+                    ? [new Date(String(formData?.[question?.key]))]
+                    : []
+                }
+                onChange={(args) => {
+                  setShowDatePicker(false);
+                  setFormData((prev: EligibilityFormData) => ({
+                    ...prev,
+                    [question.key]:
+                      args.value.toISOString() as unknown as FormAnswer,
+                  }));
+                }}
+              />
+            )}
+          </>
+        );
+      case "select":
+        return (
+          <View>
+            <Select
+              name={question.key}
+              options={
+                question?.options?.map((opt) => ({
+                  label: opt.label,
+                  value: opt.value,
+                })) || []
+              }
+              onChange={(option) => {
+                setFormData((prev: EligibilityFormData) => ({
+                  ...prev,
+                  [question.key]: option.value as unknown as FormAnswer,
+                }));
+              }}
+              value={String(formData?.[question?.key] ?? "")}
+              placeholder={question.placeholder || "Select an option"}
+            />
+          </View>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className={styles.form}>
+      {!showResults && (
+        <>
+          <div className={styles.formContainer}>
+            {currentQuestion.questions.map((question) => (
+              <div key={question.key} className={styles.formGroup}>
+                <div>
+                  <label>{question.label}</label>{" "}
+                  {question.required && (
+                    <span className={styles.requiredAsterisk}>*</span>
+                  )}
+                </div>
+                {renderInput(question)}
+              </div>
+            ))}
+          </div>
+
+          <div className={styles.buttonsContainer}>
+            <Button
+              className={styles.button}
+              variant="outline"
+              color="primary"
+              onClick={onBack}
+              disabled={currentStep === 0}
+            >
+              Back
+            </Button>
+            <Button
+              className={styles.button}
+              variant="outline"
+              color="primary"
+              onClick={() => {
+                onNext();
+                if (currentStep === eligibilityQuestions.length - 1)
+                  setShowResults(true);
+              }}
+              disabled={currentQuestion.questions.some((question) => {
+                if (!question.required) return false;
+                const answer = formData?.[question.key];
+                return !answer;
+              })}
+            >
+              {currentStep === eligibilityQuestions.length - 1
+                ? "Check Eligibility"
+                : "Next"}
+            </Button>
+          </div>
+        </>
+      )}
+      {showResults && (
+        <Results formData={formData} setShowResults={setShowResults} />
+      )}
+    </div>
+  );
+};
+
+export default Form;
