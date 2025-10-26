@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Questrial } from "next/font/google";
 import { View } from "reshaped";
 import AuthWrapper from "@/components/Auth/AuthWrapper";
@@ -36,6 +36,13 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   manifest: "/site.webmanifest",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  userScalable: false,
+  maximumScale: 1,
 };
 
 export default function RootLayout({
