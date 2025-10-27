@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import classNames from "classnames";
 import { Button, Card, View, Text, TextField } from "reshaped";
 import { IconButton } from "@radix-ui/themes";
-import CFLLogo from "@/public/CFL-logo.png";
+import CFLLogo from "@/public/CFL-main-logo.png";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import type { AuthAction } from "@/types/auth";
 import { AuthFormData } from "@/types/auth";
@@ -171,8 +171,10 @@ const Auth: FC<IAuth> = ({ action }) => {
   return (
     <Card className={styles.authCard} elevated padding={0}>
       <View className={styles.root} backgroundColor="elevation-base" padding={8}>
-        <View direction="row" justify="center" width="100%" align={"center"} gap={2}>
-          <Image src={CFLLogo} alt="Consol Finance" width={22} height={22} />
+        <View justify="center" width="100%" align={"center"} gap={2}>
+          <div onClick={() => router.push("/")} className={styles.logoContainer}>
+            <Image src={CFLLogo} alt="Consol Finance" fill />
+          </div>
           <Text
             variant="featured-3"
             weight="bold"

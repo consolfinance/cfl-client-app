@@ -32,7 +32,7 @@ const SuccessModal: FC<{ isOpen: boolean; onClose: () => void }> = ({
         <Text variant="featured-3">Application Submitted!</Text>
         <Text variant="body-2" color="neutral-faded">
           Thank you for your application. Our credit team will review your submission
-          and contact you within 48 hours.
+          and contact you within 24 hours.
         </Text>
 
         <View
