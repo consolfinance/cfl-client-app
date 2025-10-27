@@ -3,8 +3,8 @@
 import { FC, useCallback } from "react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import CFLLogo from "@/public/CFL-logo.png";
-import { Button, Card, Divider, MenuItem, Text, View } from "reshaped";
+import CFLLogo from "@/public/CFL-main-logo.png";
+import { Button, Card, Divider, MenuItem, View } from "reshaped";
 import { menuItems } from "@/utils/menuItems";
 import styles from "./Sidebar.module.scss";
 import { ExitIcon } from "@radix-ui/react-icons";
@@ -40,10 +40,9 @@ const Sidebar: FC = () => {
           padding={6}
         >
           <View direction="row" align="center" gap={2}>
-            <Image src={CFLLogo} alt="Consol Finance" width={32} height={32} />
-            <Text variant="featured-3" color="neutral">
-              Consol Finance
-            </Text>
+            <div onClick={() => router.push("/")} className={styles.logoContainer}>
+              <Image src={CFLLogo} alt="Consol Finance" fill />
+            </div>
           </View>
 
           <View className={styles.menu} height="100%">

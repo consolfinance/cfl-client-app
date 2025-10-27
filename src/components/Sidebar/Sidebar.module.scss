@@ -28,6 +28,17 @@
     gap: 20px;
     flex: 1;
 
+    .logoContainer {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+      width: 200px;
+      height: 66px;
+      position: relative;
+      cursor: pointer;
+    }
+
     .menu {
       display: flex;
       flex-direction: column;
