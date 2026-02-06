@@ -39,9 +39,9 @@ const Form: FC<IFormProps> = ({
           <TextField
             name={question.key}
             value={
-              formData?.[question?.key] != null
-                ? String(formData?.[question?.key])
-                : ""
+              formData?.[question?.key] == null
+                ? ""
+                : String(formData?.[question?.key])
             }
             onChange={(args) => {
               const { value } = args;
@@ -52,14 +52,33 @@ const Form: FC<IFormProps> = ({
             }}
           />
         );
+      case "number":
+        return (
+          <TextField
+            name={question.key}
+            value={
+              formData?.[question?.key] == null
+                ? ""
+                : String(formData?.[question?.key])
+            }
+            inputAttributes={{ type: "number" }}
+            onChange={(args) => {
+              const { value } = args;
+              setFormData((prev: EligibilityFormData) => ({
+                ...prev,
+                [question.key]: Number(value) as unknown as FormAnswer,
+              }));
+            }}
+          />
+        );
       case "email":
         return (
           <TextField
             name={question.key}
             value={
-              formData?.[question?.key] != null
-                ? String(formData?.[question?.key])
-                : ""
+              formData?.[question?.key] == null
+                ? ""
+                : String(formData?.[question?.key])
             }
             inputAttributes={{ type: "email" }}
             onChange={(args) => {

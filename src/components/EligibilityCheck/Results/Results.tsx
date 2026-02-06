@@ -5,6 +5,7 @@ import { Button, Card, Text, View } from "reshaped";
 import LoanCard from "./LoanCard";
 import { eligibilityMatrix } from "@/utils/dummy/eligibilityCheckData";
 import styles from "./Results.module.scss";
+import dayjs from "dayjs";
 
 interface IResultsProps {
   formData: EligibilityFormData;
@@ -22,15 +23,26 @@ const Results: FC<IResultsProps> = ({ formData, setShowResults }) => {
     for (const loanKey in eligibilityMatrix) {
       const loan = eligibilityMatrix[loanKey as keyof typeof eligibilityMatrix];
 
+      // Check if employment_number is min 5 digits and only contains numbers
+      const employmentNumber = `${formData?.employment_number}`;
+      if (employmentNumber.length < 5 || !/^\d+$/.test(employmentNumber)) continue;
+
+      // Check if user last got paid within the required timeframe for this loan (35 days for all loans)
+      const dateValue = formData.date_last_paid;
+      const lastPaidDate = dayjs(dateValue as unknown as string);
+      const isRecentlyPaid = lastPaidDate.isAfter(dayjs().subtract(35, "days"));
+
+      if (!isRecentlyPaid) continue; // If not recently paid, skip this loan
+
       // Check if user's job type is valid for this loan
       const jobMatch = loan.acceptedAnswers.some(
-        (answer) => String(answer.job_type) === String(formData.job_type)
+        (answer) => String(answer.job_type) === String(formData.job_type),
       );
       if (!jobMatch) continue; // If no match for job type, skip this loan
 
       // Check if user's income is valid for this loan
       const incomeMatch = loan.acceptedAnswers.some((answer) =>
-        String(answer.monthly_income).includes(String(formData.monthly_income))
+        String(answer.monthly_income).includes(String(formData.monthly_income)),
       );
       if (incomeMatch) {
         allEligibleLoans.push(loanKey); // Add loan to eligible list
@@ -43,7 +55,7 @@ const Results: FC<IResultsProps> = ({ formData, setShowResults }) => {
       setIsEligible(true);
     } else {
       setDescription(
-        "Based on your answers, you are not eligible for any loan products."
+        "Based on your answers, you are not eligible for any loan products.",
       );
       setIsEligible(false);
     }

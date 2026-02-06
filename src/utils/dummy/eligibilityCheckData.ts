@@ -6,14 +6,8 @@ export const eligibilityQuestions: EligibilityStep[] = [
     label: "Your Details",
     questions: [
       {
-        key: "first_name",
-        label: "First Name",
-        type: "text",
-        required: true,
-      },
-      {
-        key: "last_name",
-        label: "Last Name",
+        key: "full_name",
+        label: "Full Name",
         type: "text",
         required: true,
       },
@@ -28,12 +22,6 @@ export const eligibilityQuestions: EligibilityStep[] = [
         // }
       },
       {
-        key: "whatsapp_number",
-        label: "WhatsApp Number",
-        type: "text",
-        required: false,
-      },
-      {
         key: "email",
         label: "Email Address",
         type: "email",
@@ -46,21 +34,15 @@ export const eligibilityQuestions: EligibilityStep[] = [
         required: true,
       },
       {
-        key: "date_of_birth",
-        label: "Date of Birth",
+        key: "employment_number",
+        label: "Employment Number",
+        type: "number",
+        required: true,
+      },
+      {
+        key: "date_last_paid",
+        label: "Date Last Paid",
         type: "date",
-        required: true,
-      },
-      {
-        key: "city",
-        label: "City",
-        type: "text",
-        required: true,
-      },
-      {
-        key: "residential_address",
-        label: "Residential Address",
-        type: "text",
         required: true,
       },
     ],
@@ -147,7 +129,6 @@ export const eligibilityMatrix = {
     acceptedAnswers: [
       {
         job_type: "civil_servant",
-
         monthly_income: ["100k_300k", "300k_500k", "500k_1M", "1M_2M", "over_2M"],
       },
       {
@@ -161,7 +142,6 @@ export const eligibilityMatrix = {
     acceptedAnswers: [
       {
         job_type: "civil_servant",
-
         monthly_income: ["1M_2M", "over_2M"],
       },
       {
