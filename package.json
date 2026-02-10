@@ -20,9 +20,9 @@
     "form-data": "^4.0.4",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.542.0",
-    "next": "15.5.2",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
+    "next": "15.5.9",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
     "reshaped": "^3.7.4",
     "sass": "^1.91.0",
     "uuid": "^11.1.0"
