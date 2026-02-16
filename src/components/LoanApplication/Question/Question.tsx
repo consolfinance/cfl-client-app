@@ -1,8 +1,10 @@
 "use client";
 
-import { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, SetStateAction, useState } from "react";
+import dayjs from "dayjs";
 import {
   Button,
+  Calendar,
   Card,
   Checkbox,
   FileUpload,
@@ -14,10 +16,10 @@ import {
   useToast,
   View,
 } from "reshaped";
-import type { Question, SubQuestion } from "@/utils/dummy/loantypes";
-import styles from "./Question.module.scss";
 import { LoanApplicationData } from "@/types/loans";
 import { CheckCircle2, UploadIcon, XCircle } from "lucide-react";
+import type { Question, SubQuestion } from "@/utils/dummy/loantypes";
+import styles from "./Question.module.scss";
 
 type QuestionProps = Question & {
   questionKey: string;
@@ -37,6 +39,7 @@ const QuestionComponent: FC<QuestionProps> = ({
   setSupportDocumentsToUpload,
 }) => {
   const toast = useToast();
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const handleFileInput = async ({
     value,
@@ -47,8 +50,25 @@ const QuestionComponent: FC<QuestionProps> = ({
     sq: SubQuestion;
   }) => {
     try {
-      //if file is not pdf toast error and return
-      if (value?.[0]?.type !== "application/pdf") {
+      //if file is not one of the file types specified in the accept property of the subquestion or application/pdf, show an error toast and return
+
+      if (
+        sq.accept &&
+        !sq.accept.split(",").some((type) => value?.[0]?.type === type.trim())
+      ) {
+        toast.show({
+          title: "Error",
+          text: `Invalid file type.`,
+          color: "critical",
+          icon: <XCircle />,
+          size: "large",
+          position: "top-end",
+        });
+
+        setSupportDocumentsToUpload((prev) => ({ ...prev, [sq.key]: null }));
+
+        return;
+      } else if (!sq.accept && value?.[0]?.type !== "application/pdf") {
         toast.show({
           title: "Error",
           text: "Only PDF files are allowed.",
@@ -57,11 +77,23 @@ const QuestionComponent: FC<QuestionProps> = ({
           size: "large",
           position: "top-end",
         });
+
+        setSupportDocumentsToUpload((prev) => ({ ...prev, [sq.key]: null }));
         return;
       }
 
       const file = value?.[0] ?? null;
       setSupportDocumentsToUpload((prev) => ({ ...prev, [sq.key]: file }));
+      setLoanApplicationData((prev) => ({
+        ...prev,
+        answers: {
+          ...prev.answers,
+          [questionKey]: {
+            ...prev.answers?.[questionKey],
+            [sq.key]: file ? file.name : null,
+          },
+        },
+      }));
     } catch (error) {
       console.log({ error });
     }
@@ -70,7 +102,7 @@ const QuestionComponent: FC<QuestionProps> = ({
   const getInput = (sq: SubQuestion) => {
     const value = loanApplicationData?.answers?.[questionKey]?.[sq?.key] ?? "";
     const numberValue = Number(
-      loanApplicationData?.answers?.[questionKey]?.[sq?.key] ?? 0
+      loanApplicationData?.answers?.[questionKey]?.[sq?.key] ?? 0,
     );
 
     const handleChange = (val: unknown) => {
@@ -146,6 +178,34 @@ const QuestionComponent: FC<QuestionProps> = ({
           </View>
         );
 
+      case "date":
+        return (
+          <>
+            <TextField
+              name={sq.key}
+              value={dayjs((value as string | undefined) || new Date()).format(
+                "YYYY-MM-DD",
+              )}
+              placeholder="YYYY-MM-DD"
+              onFocus={() => setShowDatePicker(true)}
+            />
+            {showDatePicker && (
+              <Calendar
+                value={(value as Date) || new Date()}
+                selectedDates={
+                  value
+                    ? [value instanceof Date ? value : new Date(value as string)]
+                    : []
+                }
+                onChange={(args) => {
+                  setShowDatePicker(false);
+                  handleChange(args?.value);
+                }}
+              />
+            )}
+          </>
+        );
+
       default:
         return null;
     }
@@ -158,7 +218,7 @@ const QuestionComponent: FC<QuestionProps> = ({
         .replace(/_/g, " ")
         .replace(
           /\w\S*/g,
-          (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+          (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(),
         ) + ".pdf"
     );
   };
@@ -207,7 +267,7 @@ const QuestionComponent: FC<QuestionProps> = ({
                         checked={
                           Boolean(supportDocumentsToUpload?.[sq.key]) ||
                           loanApplicationData?.supportingDocuments?.some(
-                            (doc) => doc.fileKey === sq.key
+                            (doc) => doc.fileKey === sq.key,
                           )
                         }
                       />
@@ -217,7 +277,7 @@ const QuestionComponent: FC<QuestionProps> = ({
                       name={sq.key}
                       inline
                       variant="headless"
-                      inputAttributes={{ accept: ".pdf" }}
+                      inputAttributes={{ accept: sq?.accept ?? "application/pdf" }}
                       onChange={({ value }) =>
                         handleFileInput({
                           value,
@@ -267,7 +327,7 @@ const QuestionComponent: FC<QuestionProps> = ({
                   )}
                   {!supportDocumentsToUpload?.[sq.key] &&
                     loanApplicationData?.supportingDocuments?.some(
-                      (doc) => doc.fileKey === sq.key
+                      (doc) => doc.fileKey === sq.key,
                     ) && (
                       <Card padding={0}>
                         <View
