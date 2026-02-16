@@ -50,7 +50,7 @@ const QuestionComponent: FC<QuestionProps> = ({
     sq: SubQuestion;
   }) => {
     try {
-      //if file is not not of the file types specified in the accept property of the subquestion or application/pdf, show an error toast and return
+      //if file is not one of the file types specified in the accept property of the subquestion or application/pdf, show an error toast and return
 
       if (
         sq.accept &&
@@ -183,7 +183,9 @@ const QuestionComponent: FC<QuestionProps> = ({
           <>
             <TextField
               name={sq.key}
-              value={dayjs((value as string) ?? new Date()).format("YYYY-MM-DD")}
+              value={dayjs((value as string | undefined) || new Date()).format(
+                "YYYY-MM-DD",
+              )}
               placeholder="YYYY-MM-DD"
               onFocus={() => setShowDatePicker(true)}
             />

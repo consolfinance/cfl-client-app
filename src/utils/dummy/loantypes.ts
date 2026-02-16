@@ -17,7 +17,7 @@ export type SubQuestion = {
   enum?: { label: string; value: string }[];
   checkboxText?: string;
   weight: number;
-  accept: string;
+  accept?: string;
 };
 
 export type Question = {
@@ -514,7 +514,7 @@ export const loanTypeQuestions = {
             },
 
             {
-              key: "id_number",
+              key: "id_number_next_of_kin",
               label: "National ID Number",
               placeholder: "Enter your National ID Number",
               required: true,
@@ -691,8 +691,8 @@ export const loanTypeQuestions = {
               label: "National ID (Back)",
               required: true,
               type: "fileUpload",
-              weight: 5,
               accept: "application/pdf,image/jpeg,image/png",
+              weight: 5,
             },
           ],
         },

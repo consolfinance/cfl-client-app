@@ -158,11 +158,6 @@ const Overview: FC<OverviewProps> = ({
     try {
       setPaginationLoaders({ next: true, back: false });
       // First check if all required fields are filled
-      console.log({
-        activeStep,
-        loanApplicationData,
-        answers: loanApplicationData.answers,
-      });
 
       if (!isStepComplete(activeStep, loanApplicationData.answers)) {
         // Show an error message or highlight the incomplete fields
