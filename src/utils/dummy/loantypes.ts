@@ -616,7 +616,7 @@ export const loanTypeQuestions = {
             {
               key: "requested_amount",
               label: "Requested Loan Amount (MWK)",
-              type: "number",
+              type: "string",
               placeholder: "Enter amount in MWK",
               required: true,
               weight: 5,
@@ -630,7 +630,7 @@ export const loanTypeQuestions = {
             {
               key: "requested_term",
               label: "Requested Loan Term (Months)",
-              type: "number",
+              type: "string",
               placeholder: "Enter loan term in months",
               required: true,
               weight: 5,
