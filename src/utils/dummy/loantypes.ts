@@ -12,10 +12,12 @@ export type SubQuestion = {
     | "select"
     | "textarea"
     | "checkbox"
-    | "fileUpload";
+    | "fileUpload"
+    | "date";
   enum?: { label: string; value: string }[];
   checkboxText?: string;
   weight: number;
+  accept: string;
 };
 
 export type Question = {
@@ -43,20 +45,27 @@ export const dummyLoanTypes = [
   },
   {
     id: 3,
+    type: "personal",
+    slug: "civil-service-advantage-loan",
+    name: "Civil Service Advantage Loan",
+    description: "Longer terms, lower fees, more flexibility.",
+  },
+  {
+    id: 4,
     type: "business",
     slug: "business-step-up-loan",
     name: "Step Up Loan",
     description: "A loan to support very small businesses and startups.",
   },
   {
-    id: 4,
+    id: 5,
     type: "business",
     slug: "business-boost-loan",
     name: "Business Boost Loan",
     description: "Working capital for SMEs and small traders.",
   },
   {
-    id: 5,
+    id: 6,
     type: "business",
     slug: "trade-finance-loan",
     name: "Trade Finance Loan",
@@ -432,6 +441,258 @@ export const loanTypeQuestions = {
               required: false,
               type: "fileUpload",
               weight: 5,
+            },
+          ],
+        },
+      ],
+    },
+  ],
+
+  "civil-service-advantage-loan": [
+    {
+      step: 0,
+      title: "Your Details",
+      subtitle: "Personal Information",
+      questions: [
+        {
+          key: "personal_details",
+          label: "Personal Details",
+          subQuestions: [
+            {
+              key: "full_name",
+              label: "Full Name",
+              placeholder: "Enter your full name",
+              required: true,
+              type: "string",
+              weight: 5,
+            },
+            {
+              key: "phone_number",
+              label: "Phone Number",
+              placeholder: "+265...",
+              required: true,
+              type: "string",
+              weight: 5,
+            },
+            {
+              key: "email_address",
+              label: "Email Address",
+              placeholder: "e.g. example@example.com",
+              required: true,
+              type: "string",
+              weight: 5,
+            },
+            {
+              key: "govt_employment_number",
+              label: "Government Employment Number",
+              placeholder: "Enter your Government Employment Number",
+              required: true,
+              type: "string",
+              weight: 5,
+            },
+            {
+              key: "id_number",
+              label: "National ID Number",
+              placeholder: "Enter your National ID Number",
+              required: true,
+              type: "string",
+              weight: 5,
+            },
+          ],
+        },
+        {
+          key: "next_of_kin_details",
+          label: "Next of Kin Details",
+          subQuestions: [
+            {
+              key: "full_name_next_of_kin",
+              label: "Next of Kin's Full Name",
+              placeholder: "Enter your next of kin's full name",
+              required: true,
+              type: "string",
+              weight: 5,
+            },
+
+            {
+              key: "id_number",
+              label: "National ID Number",
+              placeholder: "Enter your National ID Number",
+              required: true,
+              type: "string",
+              weight: 5,
+            },
+            {
+              key: "relationship_next_of_kin",
+              label: "Relationship to Next of Kin",
+              placeholder: "E.g. Spouse, Parent, Sibling",
+              required: true,
+              type: "string",
+              weight: 5,
+            },
+            {
+              key: "phone_next_of_kin",
+              label: "Next of Kin's Phone Number",
+              placeholder: "+265...",
+              required: true,
+              type: "string",
+              weight: 5,
+            },
+            {
+              key: "address_next_of_kin",
+              label: "Next of Kin's Address",
+              placeholder: "Enter your next of kin's address",
+              required: true,
+              type: "string",
+              weight: 5,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      step: 1,
+      title: "Financials",
+      subtitle: "Financial Information",
+      questions: [
+        {
+          key: "occupation_details",
+          label: "Occupation Details",
+          subQuestions: [
+            {
+              key: "employment_status",
+              label: "Employment Status",
+              type: "radio",
+              enum: [
+                { label: "Employed", value: "employed" },
+                { label: "Self-Employed", value: "self_employed" },
+                { label: "Unemployed", value: "unemployed" },
+              ],
+              required: true,
+              weight: 5,
+            },
+            {
+              key: "occupation_title",
+              label: "Occupation Title",
+              type: "string",
+              placeholder: "E.g. Agricultural Extension Officer, Nurse, Teacher",
+              required: true,
+              weight: 5,
+            },
+            {
+              key: "net_income",
+              label: "Net Income",
+              type: "radio",
+              enum: [
+                { label: "Less than K100,000", value: "less_than_100000" },
+                { label: "K100,000 - K300,000", value: "100000_300000" },
+                { label: "K300,000 - K700,000", value: "300000_700000" },
+                { label: "K700,000 - K1,000,000", value: "700000_1000000" },
+                { label: "More than K1,000,000", value: "more_than_1000000" },
+              ],
+              required: true,
+              weight: 5,
+            },
+            {
+              key: "last_date_paid",
+              label: "Last Date Paid by Government",
+              placeholder: "Enter last date paid by government",
+              required: true,
+              type: "date",
+              weight: 5,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      step: 2,
+      title: "Loan Request",
+      subtitle: "Credit & Governance",
+      questions: [
+        {
+          key: "loan_details",
+          label: "Loan Details",
+          subQuestions: [
+            {
+              key: "requested_amount",
+              label: "Requested Loan Amount (MWK)",
+              type: "number",
+              placeholder: "Enter amount in MWK",
+              required: true,
+              weight: 5,
+            },
+          ],
+        },
+        {
+          key: "loan_term",
+          label: "Loan Term (Months)",
+          subQuestions: [
+            {
+              key: "requested_term",
+              label: "Requested Loan Term (Months)",
+              type: "number",
+              placeholder: "Enter loan term in months",
+              required: true,
+              weight: 5,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      step: 3,
+      title: "Submit Application",
+      subtitle: "Review & Confirm",
+      questions: [
+        {
+          key: "crb_authorisation",
+          label: "Credit Authorisation",
+          subQuestions: [
+            {
+              key: "authorisation",
+              label: "",
+              checkboxText:
+                "I agree to the terms & conditions, data use policy, and credit assessment using transaction history.",
+              required: true,
+              type: "checkbox",
+              weight: 5,
+            },
+          ],
+        },
+        {
+          key: "additional_information",
+          label: "Additional Information",
+          subQuestions: [
+            {
+              key: "additional_info",
+              label: "Additional Notes to Credit Officer (optional)",
+              placeholder:
+                "Any additional information you'd like to share with the credit officer",
+              required: false,
+              type: "textarea",
+              weight: 5,
+            },
+          ],
+        },
+        {
+          key: "final_uploads",
+          label: "Final Uploads",
+          subQuestions: [
+            {
+              key: "national_id_front",
+              label: "National ID (Front)",
+              required: true,
+              type: "fileUpload",
+              accept: "application/pdf,image/jpeg,image/png",
+              weight: 5,
+            },
+            {
+              key: "national_id_back",
+              label: "National ID (Back)",
+              required: true,
+              type: "fileUpload",
+              weight: 5,
+              accept: "application/pdf,image/jpeg,image/png",
             },
           ],
         },

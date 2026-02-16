@@ -59,14 +59,14 @@ const Overview: FC<OverviewProps> = ({
   >("neutral");
 
   const [activeStep, setActiveStep] = useState(
-    loanApplicationData?.currentStep || 0
+    loanApplicationData?.currentStep || 0,
   );
   const loan = dummyLoanTypes.find(
-    (l) => l.type === loanType && l.slug === loanSlug
+    (l) => l.type === loanType && l.slug === loanSlug,
   );
 
   const showCalculator = JSON.parse(
-    process.env.NEXT_PUBLIC_APP_SHOW_CALCULATOR || "false"
+    process.env.NEXT_PUBLIC_APP_SHOW_CALCULATOR || "false",
   );
 
   const getBadgeColor = () => {
@@ -98,10 +98,10 @@ const Overview: FC<OverviewProps> = ({
 
   const isStepComplete = (
     currentStep: number,
-    answers: { [key: string]: { [key: string]: unknown } }
+    answers: { [key: string]: { [key: string]: unknown } },
   ): boolean => {
     const stepData = loanTypeQuestions[loanSlug]?.find(
-      (step) => step.step === currentStep
+      (step) => step.step === currentStep,
     );
     if (!stepData) return false;
 
@@ -115,7 +115,7 @@ const Overview: FC<OverviewProps> = ({
         return (
           answerValue !== undefined && answerValue !== null && answerValue !== ""
         );
-      })
+      }),
     );
   };
 
@@ -158,6 +158,11 @@ const Overview: FC<OverviewProps> = ({
     try {
       setPaginationLoaders({ next: true, back: false });
       // First check if all required fields are filled
+      console.log({
+        activeStep,
+        loanApplicationData,
+        answers: loanApplicationData.answers,
+      });
 
       if (!isStepComplete(activeStep, loanApplicationData.answers)) {
         // Show an error message or highlight the incomplete fields
@@ -177,14 +182,14 @@ const Overview: FC<OverviewProps> = ({
 
       const nextStep = Math.min(
         activeStep + 1,
-        (loanTypeQuestions[loanSlug]?.length || 1) - 1
+        (loanTypeQuestions[loanSlug]?.length || 1) - 1,
       );
 
       const isLastStep =
         activeStep === (loanTypeQuestions[loanSlug]?.length || 1) - 1;
 
       const questions = loanTypeQuestions[loanSlug].flatMap(
-        (step) => step.questions
+        (step) => step.questions,
       );
 
       const scoreData = isLastStep
@@ -218,7 +223,7 @@ const Overview: FC<OverviewProps> = ({
             "Content-Type": "application/json",
           },
           body: payload,
-        }
+        },
       );
 
       if (!response.ok) {
@@ -229,7 +234,7 @@ const Overview: FC<OverviewProps> = ({
 
       // Proceed to the next step
       setActiveStep((prev) =>
-        Math.min(prev + 1, loanTypeQuestions[loanSlug]?.length - 1)
+        Math.min(prev + 1, loanTypeQuestions[loanSlug]?.length - 1),
       );
 
       setLoanApplicationData((prev) => ({
@@ -240,7 +245,7 @@ const Overview: FC<OverviewProps> = ({
             (sd: { file: { id: number }; fileKey: string }) => ({
               file: sd.file.id,
               fileKey: sd.fileKey,
-            })
+            }),
           ) || []),
         ],
       }));
@@ -287,7 +292,7 @@ const Overview: FC<OverviewProps> = ({
             "Content-Type": "application/json",
           },
           body: JSON.stringify(payload),
-        }
+        },
       );
 
       if (!response.ok) {
@@ -309,7 +314,7 @@ const Overview: FC<OverviewProps> = ({
             (sd: { file: { id: number }; fileKey: string }) => ({
               file: sd.file.id,
               fileKey: sd.fileKey,
-            })
+            }),
           ) || []),
         ],
       }));
