@@ -8,6 +8,7 @@ const redirectableRoutes = [
   "/business-step-up-loan",
   "/business-boost-loan",
   "/trade-finance-loan",
+  "/civil-service-advantage-loan",
 ];
 
 export function middleware(req: NextRequest) {
@@ -38,7 +39,7 @@ export function middleware(req: NextRequest) {
   ) {
     return NextResponse.json(
       { message: "Unauthorised. from middleware" },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
