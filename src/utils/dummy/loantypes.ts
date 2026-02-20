@@ -478,7 +478,7 @@ export const loanTypeQuestions = {
               key: "email_address",
               label: "Email Address",
               placeholder: "e.g. example@example.com",
-              required: true,
+              required: false,
               type: "string",
               weight: 5,
             },
@@ -681,7 +681,7 @@ export const loanTypeQuestions = {
             {
               key: "national_id_front",
               label: "National ID (Front)",
-              required: true,
+              required: false,
               type: "fileUpload",
               accept: "application/pdf,image/jpeg,image/png",
               weight: 5,
@@ -689,7 +689,7 @@ export const loanTypeQuestions = {
             {
               key: "national_id_back",
               label: "National ID (Back)",
-              required: true,
+              required: false,
               type: "fileUpload",
               accept: "application/pdf,image/jpeg,image/png",
               weight: 5,
